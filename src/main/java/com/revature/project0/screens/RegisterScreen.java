@@ -1,8 +1,8 @@
 package com.revature.project0.screens;
 
-import com.revature.project0.daos.AccountDAO;
 import com.revature.project0.daos.UserDAO;
 import com.revature.project0.models.AppUser;
+import com.revature.project0.util.AppUserInfo;
 import com.revature.project0.util.ScreenRouter;
 
 import java.io.BufferedReader;
@@ -11,17 +11,17 @@ import static com.revature.project0.Driver.app;
 
 public class RegisterScreen extends Screen {
 
-
     private UserDAO userDAO;
-    private AccountDAO accountDAO = new AccountDAO();//TODO: cleanup this gross thing
     private BufferedReader consoleReader;
     private ScreenRouter router;
+    private AppUserInfo appUserInfo;
 
-    public RegisterScreen(BufferedReader consoleReader, ScreenRouter router, UserDAO userDAO){
+    public RegisterScreen(BufferedReader consoleReader, ScreenRouter router, AppUserInfo appUserInfo, UserDAO userDAO){
         super("RegisterScreen", "/register");
         this.consoleReader = consoleReader;
         this.router = router;
         this.userDAO = userDAO;
+        this.appUserInfo = appUserInfo;
     }
 
 
@@ -116,23 +116,5 @@ public class RegisterScreen extends Screen {
 
     }
 
-
-
-    //TODO: move this to AccountDAO
-    private boolean createCheckingOrSavings(AppUser appUser, String userSelection){
-
-        switch (userSelection) {
-            case "1":
-                System.out.println("Creating Checking account...");
-                accountDAO.createAccount(appUser, "checking");
-                break;
-            case "2":
-                System.out.println("Creating Savings account...");
-                accountDAO.createAccount(appUser, "savings");
-                break;
-        }
-
-        return false;
-    }
 
 }

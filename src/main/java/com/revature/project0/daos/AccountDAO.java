@@ -99,7 +99,6 @@ public class AccountDAO {
     }
 
 
-    //TODO: temporary until allowing for multiple accounts
     public AppAccount findAccountByUsername(String username){
 
         AppAccount account = null;
@@ -128,6 +127,93 @@ public class AccountDAO {
     }
 
 
+    public AppAccount makeDeposit(String username, double amount){
+
+        AppAccount account = findAccountByUsername(username);
+
+        double currentBalance = 0;
+
+        try {
+            if (account != null) {//throw nullpointerexception if false
+                currentBalance = account.getBalance();
+            }
+        } catch (NullPointerException e){
+            System.out.println("Error in making withdrawal!");
+            e.printStackTrace();
+            return account;
+        }
+
+        double setBalanceTo = currentBalance + amount;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            String sql = "update bank_account " +
+                    "set balance = ? " +
+                    "where username = ?;";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setDouble(1, setBalanceTo);
+            pstmt.setString(2, username);
+
+            pstmt.executeUpdate();
+
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        account = findAccountByUsername(username);
+
+        return account;
+
+    }
+
+
+    public AppAccount makeWithdrawal(String username, double amount){
+
+        AppAccount account = findAccountByUsername(username);
+
+        double currentBalance;
+
+        try {
+            if (account.getBalance() < amount) {
+                System.out.println("You do not possess enough funds in this account to make that withdrawal!");
+                return account;
+            } else {
+                currentBalance = account.getBalance();
+            }
+        } catch (NullPointerException e){
+            System.out.println("Error in making withdrawal!");
+            e.printStackTrace();
+            return account;
+        }
+
+        amount *= -1;
+
+        double setBalanceTo = currentBalance + amount;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            String sql = "update bank_account " +
+                    "set balance = ? " +
+                    "where username = ?;";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setDouble(1, setBalanceTo);
+            pstmt.setString(2, username);
+
+            pstmt.executeUpdate();
+
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        account = findAccountByUsername(username);
+
+        return account;
+
+    }
 
 
 }

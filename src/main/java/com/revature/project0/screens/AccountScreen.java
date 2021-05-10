@@ -1,30 +1,198 @@
 package com.revature.project0.screens;
 
+import com.revature.project0.daos.AccountDAO;
 import com.revature.project0.daos.UserDAO;
+import com.revature.project0.models.AppAccount;
 import com.revature.project0.models.AppUser;
+import com.revature.project0.util.AppUserInfo;
 import com.revature.project0.util.ScreenRouter;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 
 public class AccountScreen extends Screen {
 
     private BufferedReader consoleReader;
     private ScreenRouter router;
+    private AppUserInfo appUserInfo;
     private UserDAO userDAO;
+    private AccountDAO accountDAO;
+    private AppAccount appAccount;//for use when needing username for account cross-reference
 
-    public AccountScreen(BufferedReader consoleReader, ScreenRouter router, UserDAO userDAO){
+    public AccountScreen(BufferedReader consoleReader, ScreenRouter router, AppUserInfo appUserInfo,
+                         UserDAO userDAO, AccountDAO accountDAO){
         super("AccountScreen", "/account");
         this.consoleReader = consoleReader;
         this.router = router;
         this.userDAO = userDAO;
+        this.accountDAO = accountDAO;
+        this.appUserInfo = appUserInfo;//stores username and password for access
+        this.appAccount = null;
     }
 
 
     public void render(){
 
-        AppUser appUser = null;
+        AppUser appUser = userDAO.findUserByUsernameAndPassword(appUserInfo.getCurrentUser(),
+                appUserInfo.getCurrentUserPassword());
 
-        System.out.println("AccountScreen under construction!");
+        String username = appUser.getUsername();
+        boolean hasAccount = true;
+        appAccount = null;//just in case
+
+        try {
+
+            appAccount = accountDAO.findAccountByUsername(username);
+
+            if(appAccount != null){
+                hasAccount = true;
+            }
+
+        } catch (NullPointerException e) {
+            hasAccount = false;
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+        if(hasAccount) {
+            System.out.println("Welcome to your account " + appUser.getUsername() + ".");
+            System.out.println("What do you wish to do?.");
+            System.out.println("1) View account balance");
+            System.out.println("2) Make a deposit");
+            System.out.println("3) Make a withdrawal");
+
+            try {
+
+                String userSelection = consoleReader.readLine();
+
+                double amount;
+
+                switch (userSelection) {
+                    case "1":
+                        System.out.println("Balance is WIP");
+                        break;
+                    case "2":
+                        System.out.println("How much do you wish to deposit?");
+                        amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
+                        makeDeposit(amount);
+                        break;
+                    case "3":
+                        System.out.println("How much do you wish to withdraw?");
+                        amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
+                        makeWithdrawal(amount);
+                        break;
+                }
+            } catch (IOException e) {
+                System.out.println("Invalid input!");
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Please make an account " + appUser.getUsername() + "!");
+            System.out.println("1) Create checking account");
+            System.out.println("2) Create savings account");
+
+            String checkOrSave = "checking";//TODO: make it so that this doesn't need to have a default set just in case
+            String userSelection;
+            boolean willMakeAccount = true;
+
+            try {
+                userSelection = consoleReader.readLine();
+
+                switch (userSelection) {
+                    case "1":
+                        checkOrSave = "checking";
+                        break;
+                    case "2":
+                        checkOrSave = "savings";
+                        break;
+                }
+            } catch (IOException e) {
+                willMakeAccount = false;
+                System.out.println("There was a problem creating your account.  Redirecting...");
+                e.printStackTrace();
+            }
+
+            if(willMakeAccount) {
+                accountDAO.createAccount(appUser, checkOrSave);
+            }
+        }
+
+    }
+
+    private double getBalance(String username){
+        double balance = 0;
+
+        System.out.println("Getting the balance in your account...");
+
+        try {
+
+            AppAccount appAccount = accountDAO.findAccountByUsername(username);
+
+            balance = appAccount.getBalance();
+
+        } catch (NullPointerException e){
+            System.out.println("There was an issue in acquiring the balance to your account.");
+            balance = 0;
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return balance;
+    }
+
+
+    private void makeDeposit(double amount){
+        if(amount <= 0){
+            System.out.println("Invalid value!");
+            return;
+        }
+
+        try {
+
+            appAccount = accountDAO.makeDeposit(appAccount.getAccountOwner(), amount);
+
+            if(appAccount != null) {
+                System.out.println("You successfully deposited " + amount);
+                System.out.println("Your current balance is " + appAccount.getBalance());
+            }
+
+        } catch (NullPointerException e){
+            System.out.println("There was an error in making your deposit!");
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void makeWithdrawal(double amount){
+        if(amount <= 0){
+            System.out.println("Invalid value!");
+            return;
+        }
+
+        try {
+            appAccount = accountDAO.makeWithdrawal(appAccount.getAccountOwner(), amount);
+
+            if(appAccount != null) {
+                System.out.println("You successfully withdrew " + ( amount*(-1) ));
+                System.out.println("Your current balance is " + appAccount.getBalance());
+            }
+
+        } catch (NullPointerException e){
+            System.out.println("There was an error in making your withdrawal!");
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 

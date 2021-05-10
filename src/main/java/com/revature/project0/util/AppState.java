@@ -1,5 +1,6 @@
 package com.revature.project0.util;
 
+import com.revature.project0.daos.AccountDAO;
 import com.revature.project0.daos.UserDAO;
 import com.revature.project0.screens.AccountScreen;
 import com.revature.project0.screens.LoginScreen;
@@ -15,15 +16,15 @@ No other classes will create a "new" BufferedReader or ScreenRouter.
 
 Instantiates all "new" Screens.
 
-TODO: instantiate all DAO classes?  Pass them into Screen classes as a parameter?
-
  */
 
 public class AppState {
     private BufferedReader consoleReader;
     private ScreenRouter router;
-    private final UserDAO userDAO;
+    private AppUserInfo appUserInfo;
     private boolean appRunning;
+    private final UserDAO userDAO;
+    private final AccountDAO accountDAO;
 
     public AppState(){
 
@@ -31,13 +32,15 @@ public class AppState {
 
         appRunning = true;
         consoleReader = new BufferedReader(new InputStreamReader(System.in));
-        userDAO = new UserDAO();
         router = new ScreenRouter();
+        userDAO = new UserDAO();
+        accountDAO = new AccountDAO();
+        appUserInfo = new AppUserInfo();
 
         router.addScreen(new WelcomeScreen(consoleReader, router));
-        router.addScreen(new RegisterScreen(consoleReader, router, userDAO));
-        router.addScreen(new LoginScreen(consoleReader, router, userDAO));
-        router.addScreen(new AccountScreen(consoleReader, router, userDAO));//TODO: make this do something so it's not pointless
+        router.addScreen(new RegisterScreen(consoleReader, router, appUserInfo, userDAO));
+        router.addScreen(new LoginScreen(consoleReader, router, appUserInfo, userDAO, accountDAO));
+        router.addScreen(new AccountScreen(consoleReader, router, appUserInfo, userDAO, accountDAO));
 
         System.out.println("Application initialized!");
 
