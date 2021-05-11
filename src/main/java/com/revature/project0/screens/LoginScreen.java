@@ -34,26 +34,39 @@ public class LoginScreen extends Screen {
 
         String username = null;
         String password = null;
-        AppUser appUser = null;
+        AppUser appUser;//null by default
 
-        //TODO: make this a while loop that continues until values are not null
-        try {
-            System.out.println("Enter username: ");
-            username = consoleReader.readLine();
+        int tries = 5;
+        whileL : while (true){
+            try {
+                System.out.println("Enter username: ");
+                username = consoleReader.readLine();
 
-            System.out.println("Enter password: ");
-            password = consoleReader.readLine();
+                if(username.equals("e")){
+                    System.out.println("Redirecting to welcome screen...");
+                    return;
+                }
 
-            System.out.println("Locating user...");
+                System.out.println("Enter password: ");
+                password = consoleReader.readLine();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                System.out.println("Locating user...");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
-        if(username == null || password == null){
-            System.out.println("User not found!");
-            return;
+            if (username.length() >= 3 && username.length() <=20 &&
+                    password.length() > 7 && password.length() < 20) {
+                break whileL;
+            } else if (tries > 0) {
+                tries--;
+                System.out.println("Invalid username/password! Try again, or enter 'e' to exit to welcome screen.");
+            } else {
+                System.out.println("Too many invalid login attempts.  Redirecting to welcome screen...");
+                return;
+            }
         }
 
         boolean userFound = false;

@@ -3,6 +3,7 @@ package com.revature.project0.daos;
 import com.revature.project0.models.AppAccount;
 import com.revature.project0.models.AppUser;
 import com.revature.project0.util.ConnectionFactory;
+import org.postgresql.util.PSQLException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -175,7 +176,7 @@ public class AccountDAO {
 
         double setBalanceTo = currentBalance + amount;
 
-        String newBalance = "$" + String.valueOf(setBalanceTo);
+        String newBalance = String.format("$%.2f", setBalanceTo);
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
@@ -196,40 +197,44 @@ public class AccountDAO {
 
         account = findAccountByUsername(username);
 
+        System.out.println("Successfully withdrew " + String.format("$%.2f", amount * -1));
         return account;
 
     }
 
 
 
-    /*
-    public AppAccount findAccountByUsernameAndAccountType(String username, String accountType){
 
-        AppAccount account = null;
+    public boolean removeUserAccount(String username){
+
+        //first check to see if balance is 0
+        //if it isn't, state they must withdraw funds until no balance is left
+        AppAccount account = findAccountByUsername(username);
+        if(account.getBalance() > 0){
+            System.out.println("You must withdraw all funds from your account before you can close it!");
+            return false;
+        }
+
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
-            String sql = "select * from bank_account where username = ? and account_type = ?";
+            String sql = "delete from bank_account where username = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
-            pstmt.setString(2, accountType);
 
-            ResultSet rs = pstmt.executeQuery();
+            pstmt.executeQuery();
 
-            while(rs.next()){
-                account = new AppAccount();
-                account.setAccountID(rs.getString("account_id"));
-                account.setAccountOwner(rs.getString("username"));
-                account.setAccountType(rs.getString("account_type"));
-                account.setDateCreated(rs.getDate("date_created"));
-                account.setBalance(rs.getDouble("balance"));
-            }
+        } catch (PSQLException e) {
+            return true;//this thrown exception indicates no results returned by the query, indicating deletion
         } catch(SQLException e){
+            System.out.println("There was a problem trying to close your account!");
             e.printStackTrace();
+            return false;
         }
 
-        return account;
+        //System.out.println("Account successfully removed!");
+        return true;
     }
-    */
+
 
 }

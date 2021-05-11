@@ -65,6 +65,7 @@ public class AccountScreen extends Screen {
             System.out.println("1) View account balance");
             System.out.println("2) Make a deposit");
             System.out.println("3) Make a withdrawal");
+            System.out.println("4) Delete your bank account");
             System.out.println("4) Exit");
 
             try {
@@ -72,26 +73,65 @@ public class AccountScreen extends Screen {
                 String userSelection = consoleReader.readLine();
 
                 double amount;
+                int tries = 5;
 
-                switch (userSelection) {
-                    case "1":
-                        getBalance(appAccount.getAccountOwner());
-                        break;
-                    case "2":
-                        System.out.println("How much do you wish to deposit?");
-                        System.out.print("$");
-                        amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
-                        makeDeposit(amount);
-                        break;
-                    case "3":
-                        System.out.println("How much do you wish to withdraw?");
-                        System.out.print("$");
-                        amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
-                        makeWithdrawal(amount);
-                        break;
-                    case "4":
-                        System.out.println("Exiting account...");
-                        break;
+                whileL : while(tries > 0) {
+                    switch (userSelection) {
+                        case "1":
+                            getBalance(appAccount.getAccountOwner());
+                            tries = 5;
+                            break;
+                        case "2":
+                            System.out.println("How much do you wish to deposit?");
+                            System.out.print("$");
+                            amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
+                            makeDeposit(amount);
+                            tries = 5;
+                            break;
+                        case "3":
+                            System.out.println("How much do you wish to withdraw?");
+                            System.out.print("$");
+                            amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
+                            makeWithdrawal(amount);
+                            tries = 5;
+                            break;
+                        case "4":
+                            System.out.println("Are you sure you want to close your account?");
+                            System.out.println("1) I'm sure.");
+                            System.out.println("2) On second thought, maybe not.");
+
+                            String userSelection2 = consoleReader.readLine();
+                            if (userSelection2.equals("1")) {
+                                if( closeAccount() ){
+                                    break whileL;
+                                } else {
+                                    System.out.println("Your account failed to close!");
+                                    tries = 5;
+                                    break;
+                                }
+                            } else if (userSelection2.equals("2")) {
+                                System.out.println("Your account remains open.");
+                                tries = 5;
+                                break;
+                            } else {
+                                System.out.println("Invalid selection.  Returning to main selection.");
+                                tries = 5;
+                                break;
+                            }
+                        case "5":
+                            System.out.println("Exiting account...");
+                            break whileL;
+                    }
+
+                    System.out.println("What else do you wish to do?");
+                    tries--;
+
+                    System.out.println("1) View account balance");
+                    System.out.println("2) Make a deposit");
+                    System.out.println("3) Make a withdrawal");
+                    System.out.println("4) Delete your bank account");
+                    System.out.println("5) Exit");
+                    userSelection = consoleReader.readLine();
                 }
             } catch (IOException e) {
                 System.out.println("Invalid input!");
@@ -101,24 +141,36 @@ public class AccountScreen extends Screen {
             }
         } else {
             System.out.println("Please make an account " + appUser.getUsername() + "!");
-            System.out.println("1) Create checking account");
-            System.out.println("2) Create savings account");
 
             String checkOrSave = "checking";//TODO: make it so that this doesn't need to have a default set just in case
             String userSelection;
             boolean willMakeAccount = true;
 
-            try {
-                userSelection = consoleReader.readLine();
 
-                switch (userSelection) {
-                    case "1":
-                        checkOrSave = "checking";
-                        break;
-                    case "2":
-                        checkOrSave = "savings";
-                        break;
+
+            try {
+                int tries = 5;
+                //userSelection = consoleReader.readLine();
+
+                whileL : while(tries > 0) {
+                    System.out.println("1) Create checking account");
+                    System.out.println("2) Create savings account");
+                    userSelection = consoleReader.readLine();
+
+                    switch (userSelection) {
+                        case "1":
+                            checkOrSave = "checking";
+                            break whileL;
+                        case "2":
+                            checkOrSave = "savings";
+                            break whileL;
+                    }
+
+                    System.out.println("Invalid selection.  Try again.");
+                    tries--;
                 }
+
+
             } catch (IOException e) {
                 willMakeAccount = false;
                 System.out.println("There was a problem creating your account.  Redirecting...");
@@ -190,16 +242,6 @@ public class AccountScreen extends Screen {
             double initialBalance = appAccount.getBalance();
             appAccount = accountDAO.makeWithdrawal(appAccount.getAccountOwner(), amount);
 
-            if(initialBalance == appAccount.getBalance()){
-                System.out.println("You failed to withdraw " + String.format("$%.2f", ( amount*(-1) )) );
-                System.out.println("Your current balance is still " + String.format("$%.2f", (appAccount.getBalance())));
-            }
-
-            if(appAccount != null) {
-                System.out.println("You successfully withdrew " + String.format("$%.2f", ( amount*(-1) )) );
-                System.out.println("Your current balance is " + String.format("$%.2f", (appAccount.getBalance())));
-            }
-
         } catch (NullPointerException e){
             System.out.println("There was an error in making your withdrawal!");
             e.printStackTrace();
@@ -207,6 +249,21 @@ public class AccountScreen extends Screen {
             e.printStackTrace();
         }
 
+    }
+
+
+    private boolean closeAccount(){
+
+        return accountDAO.removeUserAccount(appAccount.getAccountOwner());
+        /*
+
+        if(accountDAO.removeUserAccount(appAccount.getAccountOwner())){
+            System.out.println("Account successfully removed!");
+        } else {
+            System.out.println("Account failed to close.");
+        }
+
+         */
     }
 
 
