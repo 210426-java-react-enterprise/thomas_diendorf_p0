@@ -224,6 +224,8 @@ public class AccountDAO {
 
             pstmt.executeQuery();
 
+            System.out.println("Deleting account...");
+
         } catch (PSQLException e) {
             return true;//this thrown exception indicates no results returned by the query, indicating deletion
         } catch(SQLException e){
@@ -235,6 +237,10 @@ public class AccountDAO {
         //System.out.println("Account successfully removed!");
         return true;
     }
+
+
+
+
 
 
 }

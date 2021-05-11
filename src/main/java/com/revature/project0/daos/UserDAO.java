@@ -1,5 +1,6 @@
 package com.revature.project0.daos;
 
+import com.revature.project0.models.AppAccount;
 import com.revature.project0.models.AppUser;
 import com.revature.project0.util.ConnectionFactory;
 import org.postgresql.util.PSQLException;
@@ -169,6 +170,37 @@ public class UserDAO {
 
         return false;
 
+    }
+
+
+    public boolean removeUserWithAccount(String username, AccountDAO accountDAO){
+
+        //first check to see if account can be removed
+        if(!accountDAO.removeUserAccount(username)){
+            return false;
+        }
+        //else the account has been removed, so continue with user deletion
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            String sql = "delete from app_user where username = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+
+            pstmt.executeUpdate();
+
+            System.out.println("Deleting user...");
+
+        } catch (PSQLException e) {
+            return true;//this thrown exception indicates no results returned by the query, indicating deletion
+        } catch(SQLException e){
+            System.out.println("There was a problem trying to close your account!");
+            e.printStackTrace();
+            return false;
+        }
+
+        //System.out.println("Account successfully removed!");
+        return true;
     }
 
 

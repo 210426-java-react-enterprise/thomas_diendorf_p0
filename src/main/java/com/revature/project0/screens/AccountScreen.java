@@ -66,7 +66,8 @@ public class AccountScreen extends Screen {
             System.out.println("2) Make a deposit");
             System.out.println("3) Make a withdrawal");
             System.out.println("4) Delete your bank account");
-            System.out.println("4) Exit");
+            System.out.println("5) Delete bank and user account");
+            System.out.println("6) Exit");
 
             try {
 
@@ -77,25 +78,28 @@ public class AccountScreen extends Screen {
 
                 whileL : while(tries > 0) {
                     switch (userSelection) {
-                        case "1":
+                        case "1"://balance
                             getBalance(appAccount.getAccountOwner());
                             tries = 5;
                             break;
-                        case "2":
+
+                        case "2"://deposit
                             System.out.println("How much do you wish to deposit?");
                             System.out.print("$");
                             amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
                             makeDeposit(amount);
                             tries = 5;
                             break;
-                        case "3":
+
+                        case "3"://withdraw
                             System.out.println("How much do you wish to withdraw?");
                             System.out.print("$");
                             amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
                             makeWithdrawal(amount);
                             tries = 5;
                             break;
-                        case "4":
+
+                        case "4"://close account
                             System.out.println("Are you sure you want to close your account?");
                             System.out.println("1) I'm sure.");
                             System.out.println("2) On second thought, maybe not.");
@@ -103,6 +107,7 @@ public class AccountScreen extends Screen {
                             String userSelection2 = consoleReader.readLine();
                             if (userSelection2.equals("1")) {
                                 if( closeAccount() ){
+                                    System.out.println("Your bank account is deleted!");
                                     break whileL;
                                 } else {
                                     System.out.println("Your account failed to close!");
@@ -118,7 +123,33 @@ public class AccountScreen extends Screen {
                                 tries = 5;
                                 break;
                             }
-                        case "5":
+
+                        case "5"://close account and delete user
+                            System.out.println("Are you sure you want to close your bank account and delete your user account?");
+                            System.out.println("1) I'm sure.");
+                            System.out.println("2) On second thought, maybe not.");
+
+                            String userSelection3 = consoleReader.readLine();
+                            if (userSelection3.equals("1")) {
+                                if( closeAccountAndDeleteUser(username) ){
+                                    System.out.println("Your bank account and user account are deleted!");
+                                    break whileL;
+                                } else {
+                                    System.out.println("Your user account failed to delete!");
+                                    tries = 5;
+                                    break;
+                                }
+                            } else if (userSelection3.equals("2")) {
+                                System.out.println("Your bank account and user account remain open.");
+                                tries = 5;
+                                break;
+                            } else {
+                                System.out.println("Invalid selection.  Returning to main selection.");
+                                tries = 5;
+                                break;
+                            }
+
+                        case "6"://exit
                             System.out.println("Exiting account...");
                             break whileL;
                     }
@@ -255,15 +286,14 @@ public class AccountScreen extends Screen {
     private boolean closeAccount(){
 
         return accountDAO.removeUserAccount(appAccount.getAccountOwner());
-        /*
 
-        if(accountDAO.removeUserAccount(appAccount.getAccountOwner())){
-            System.out.println("Account successfully removed!");
-        } else {
-            System.out.println("Account failed to close.");
-        }
+    }
 
-         */
+
+    private boolean closeAccountAndDeleteUser(String username){
+
+        return userDAO.removeUserWithAccount(username, accountDAO);
+
     }
 
 
