@@ -152,7 +152,22 @@ public class RegisterScreen extends Screen {
                 matcher = pattern.matcher(email);
 
                 if(matcher.matches()){
-                    break labelW;
+
+                    if(userDAO.findEmailByEmail(email)){//if email is found in database
+                        System.out.println("Email is already taken.");
+                        tries--;
+                        if(tries <= 0){
+                            System.out.println("Redirecting to welcome screen...");
+                            return;
+                        } else {
+                            System.out.println("Enter a different email:");
+                        }
+                    }else {
+                        System.out.println("Email " + email + " is available.");
+                        break labelW;
+                    }
+
+                    //break labelW;
                 } else if(tries > 0){
                     System.out.print("Invalid email.  Try again.  Tries left: " + tries + "\n : ");
                 } else {

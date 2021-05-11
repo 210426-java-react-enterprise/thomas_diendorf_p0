@@ -92,7 +92,6 @@ public class UserDAO {
 
 
     //to be used only for checking if username is actually taken
-    //TODO: fix this thing!!!
     public boolean findUserByUsername(String username){
         //AppUser user = null;
 
@@ -126,6 +125,46 @@ public class UserDAO {
             e.printStackTrace();
             e.printStackTrace();
             return false;//ditto, but see errors
+        }
+
+        return false;
+
+    }
+
+
+    //to be used only for checking if email is actually taken
+    public boolean findEmailByEmail(String email){
+
+        //Connection is a connection with an SQL database.
+        //SQL statements are executed, and results returned, within the Connection.
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            String sql = "select email from app_user where email = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            String userGot = null;
+
+            while(rs.next()){
+                userGot = rs.getString("email");
+            }
+
+            if(userGot.equals(email)){
+                return true;//email is taken
+            }
+
+        } catch (NullPointerException e) {
+            return false;
+        } catch (PSQLException e) {
+            //System.out.println("PSQL error caught.  Column name not found.");
+            e.printStackTrace();
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            e.printStackTrace();
+            return false;
         }
 
         return false;
