@@ -58,7 +58,8 @@ public class AccountDAO {
 
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, accountType);
-            pstmt.setDouble(3, 0.00);
+            //pstmt.setDouble(3, 0.00);
+            pstmt.setString(3, "$0.00");
 
             pstmt.executeUpdate();
 
@@ -69,34 +70,6 @@ public class AccountDAO {
         }
     }
 
-
-    public AppAccount findAccountByUsernameAndAccountType(String username, String accountType){
-
-        AppAccount account = null;
-
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-
-            String sql = "select * from bank_account where username = ? and account_type = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, username);
-            pstmt.setString(2, accountType);
-
-            ResultSet rs = pstmt.executeQuery();
-
-            while(rs.next()){
-                account = new AppAccount();
-                account.setAccountID(rs.getString("account_id"));
-                account.setAccountOwner(rs.getString("username"));
-                account.setAccountType(rs.getString("account_type"));
-                account.setDateCreated(rs.getDate("date_created"));
-                account.setBalance(rs.getDouble("balance"));
-            }
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-
-        return account;
-    }
 
 
     public AppAccount findAccountByUsername(String username){
@@ -117,7 +90,14 @@ public class AccountDAO {
                 account.setAccountOwner(rs.getString("username"));
                 account.setAccountType(rs.getString("account_type"));
                 account.setDateCreated(rs.getDate("date_created"));
-                account.setBalance(rs.getDouble("balance"));
+                //account.setBalance(rs.getDouble("balance"));
+
+                //some string to double conversion
+                StringBuilder builder = new StringBuilder(rs.getString("balance"));
+                builder.delete(0,1);//remove '$'
+                double balance = Double.valueOf(builder.toString());
+                account.setBalance(balance);
+
             }
         } catch(SQLException e){
             e.printStackTrace();
@@ -125,6 +105,7 @@ public class AccountDAO {
 
         return account;
     }
+
 
 
     public AppAccount makeDeposit(String username, double amount){
@@ -145,6 +126,8 @@ public class AccountDAO {
 
         double setBalanceTo = currentBalance + amount;
 
+        String newBalance = "$" + String.valueOf(setBalanceTo);
+
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             String sql = "update bank_account " +
@@ -153,7 +136,7 @@ public class AccountDAO {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setDouble(1, setBalanceTo);
+            pstmt.setString(1, newBalance);
             pstmt.setString(2, username);
 
             pstmt.executeUpdate();
@@ -192,6 +175,8 @@ public class AccountDAO {
 
         double setBalanceTo = currentBalance + amount;
 
+        String newBalance = "$" + String.valueOf(setBalanceTo);
+
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             String sql = "update bank_account " +
@@ -200,7 +185,7 @@ public class AccountDAO {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setDouble(1, setBalanceTo);
+            pstmt.setString(1, newBalance);
             pstmt.setString(2, username);
 
             pstmt.executeUpdate();
@@ -215,5 +200,36 @@ public class AccountDAO {
 
     }
 
+
+
+    /*
+    public AppAccount findAccountByUsernameAndAccountType(String username, String accountType){
+
+        AppAccount account = null;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            String sql = "select * from bank_account where username = ? and account_type = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            pstmt.setString(2, accountType);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                account = new AppAccount();
+                account.setAccountID(rs.getString("account_id"));
+                account.setAccountOwner(rs.getString("username"));
+                account.setAccountType(rs.getString("account_type"));
+                account.setDateCreated(rs.getDate("date_created"));
+                account.setBalance(rs.getDouble("balance"));
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return account;
+    }
+    */
 
 }

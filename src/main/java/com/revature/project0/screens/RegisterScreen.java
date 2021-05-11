@@ -6,6 +6,8 @@ import com.revature.project0.util.AppUserInfo;
 import com.revature.project0.util.ScreenRouter;
 
 import java.io.BufferedReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.revature.project0.Driver.app;
 
@@ -45,46 +47,173 @@ public class RegisterScreen extends Screen {
         try {
             System.out.println("Register for a new account!");
             System.out.println("+-------------------------+");
-
+            int tries = 5;
             //System.out.print("Age: ");
             //age = consoleReader.readLine();
 
-            //TODO: ensure this is unique, and at least 3 char
-            System.out.print("Username: ");
-            username = consoleReader.readLine();
+            //TODO: ensure this is unique
+            System.out.print("Enter a username.  Must be 3-20 characters/symbols in length: ");
+            labelW : while(true) {
+                username = consoleReader.readLine();
+                if(username.length() >= 3 && username.length() <= 20){
+                    break labelW;
+                } else if(tries > 0){
+                    System.out.print("Invalid username.  Try again.  Tries left: " + tries);
+                } else {
+                    System.out.print("Invalid username. No tries left.  Redirecting to welcome screen...");
+                    return;
+                }
+                tries--;
+            }
+            tries = 5;
 
-            //TODO: ensure at least 7 char, and repeat this to ensure user uses correct password
-            System.out.print("Password: ");
-            password = consoleReader.readLine();
+            System.out.print("Enter a password.  Must be 7-20 characters and/or symbols in length: ");
+            labelW : while(true) {
+                password = consoleReader.readLine();
+                if(password.length() >= 7 && password.length() <= 20){
+                    break labelW;
+                } else if(tries > 0){
+                    System.out.print("Invalid password.  Try again.  Tries left: " + tries);
+                } else {
+                    System.out.print("Invalid password. No tries left.  Redirecting to welcome screen...");
+                    return;
+                }
+                tries--;
+            }
+            tries = 5;
 
-            //TODO: ensure at least 3 char
-            System.out.print("First name: ");
-            firstName = consoleReader.readLine();
+            System.out.print("Enter the password you just entered again: ");
+            labelW : while(true) {
+                String password2 = consoleReader.readLine();
+                if(password2.equals(password)){
+                    break labelW;
+                } else if(tries > 0){
+                    System.out.print("Password doesn't match.  Try again.  Tries left: " + tries);
+                } else {
+                    System.out.print("Invalid password. No tries left.  Redirecting to welcome screen...");
+                    return;
+                }
+                tries--;
+            }
+            tries = 5;
 
-            //TODO: ensure at least 3 char
+
+            System.out.print("Enter your first name.  Must be 3-20 characters: ");
+            labelW : while(true) {
+                firstName = consoleReader.readLine();
+                if(firstName.length() >= 3 && firstName.length() <= 20){
+                    break labelW;
+                } else if(tries > 0){
+                    System.out.print("Invalid name.  Try again.  Tries left: " + tries);
+                } else {
+                    System.out.print("Invalid name. No tries left.  Redirecting to welcome screen...");
+                    return;
+                }
+                tries--;
+            }
+            tries = 5;
+
+
             System.out.print("Last name: ");
-            lastName = consoleReader.readLine();
+            labelW : while(true) {
+                lastName = consoleReader.readLine();
+                if(lastName.length() >= 3 && lastName.length() <= 20){
+                    break labelW;
+                } else if(tries > 0){
+                    System.out.print("Invalid name.  Try again.  Tries left: " + tries);
+                } else {
+                    System.out.print("Invalid name. No tries left.  Redirecting to welcome screen...");
+                    return;
+                }
+                tries--;
+            }
+            tries = 5;
 
-            //TODO: ensure at least 1 char before an @ char
+
+            String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher;
             System.out.print("Email: ");
-            email = consoleReader.readLine();
+            labelW : while(true) {
+                email = consoleReader.readLine();
+                matcher = pattern.matcher(email);
 
-            //TODO: ensure first 3 char are digits
-            System.out.print("Address: ");
-            address = consoleReader.readLine();
+                if(matcher.matches()){
+                    break labelW;
+                } else if(tries > 0){
+                    System.out.print("Invalid email.  Try again.  Tries left: " + tries);
+                } else {
+                    System.out.print("Invalid email. No tries left.  Redirecting to welcome screen...");
+                    return;
+                }
+                tries--;
+            }
+            tries = 5;
 
-            System.out.print("City: ");
-            city = consoleReader.readLine();
 
-            //TODO: ensure 2 char
-            System.out.print("State (2 letters only): ");
-            state = consoleReader.readLine();
+            regex = "[0-9]{3,5} [A-Z a-z]{3,34}";
+            pattern = Pattern.compile(regex);
+            System.out.print("Enter your address (7-40 characters): ");
+            labelW : while(true) {
+                address = consoleReader.readLine();
+                matcher = pattern.matcher(address);
 
-            //TODO: ensure 5 digits
+                if(/*address.length() >= 7 && address.length() <= 40*/ matcher.matches()){
+                    break labelW;
+                } else if(tries > 0){
+                    System.out.print("Invalid address.  Try again.  Tries left: " + tries);
+                } else {
+                    System.out.print("Invalid address. No tries left.  Redirecting to welcome screen...");
+                    return;
+                }
+                tries--;
+            }
+            tries = 5;
+
+            regex = "[A-Z a-z]{3,20}";
+            pattern = Pattern.compile(regex);
+            System.out.print("Enter the name of your city (3-20 characters): ");
+            labelW : while(true) {
+                city = consoleReader.readLine();
+                matcher = pattern.matcher(city);
+
+                if(/*city.length() >= 3 && city.length() <= 20*/ matcher.matches()){
+                    break labelW;
+                } else if(tries > 0){
+                    System.out.print("Invalid city.  Try again.  Tries left: " + tries);
+                } else {
+                    System.out.print("Invalid city. No tries left.  Redirecting to welcome screen...");
+                    return;
+                }
+                tries--;
+            }
+            tries = 5;
+
+
+            regex = "[A-Z]{2}";
+            pattern = Pattern.compile(regex);
+            System.out.print("Enter your State initials (2 letters only): ");
+            labelW : while(true) {
+                state = consoleReader.readLine();
+                matcher = pattern.matcher(state);
+
+                if(matcher.matches()){
+                    break labelW;
+                } else if(tries > 0){
+                    System.out.print("Invalid State.  Try again.  Tries left: " + tries);
+                } else {
+                    System.out.print("Invalid State. No tries left.  Redirecting to welcome screen...");
+                    return;
+                }
+                tries--;
+            }
+            tries = 5;
+
+
             //System.out.print("Zipcode: ");
             //zipcode = consoleReader.readLine();
 
-            //TODO: ensure proper format
+
             //System.out.print("Phone: ");
             //phone = consoleReader.readLine();
 
@@ -94,18 +223,6 @@ public class RegisterScreen extends Screen {
             System.out.println("Created user: " + newUser);
 
             userDAO.save(newUser);
-
-            /*
-
-            System.out.println("What type of account do you want?");
-            System.out.println("1) Checking");
-            System.out.println("2) Savings");
-
-            String userSelection = consoleReader.readLine();
-
-            createCheckingOrSavings(newUser, userSelection);
-
-            */
 
             //Once user is created, can login with that username and password.
             //If no account is detected after login, will create one at login screen

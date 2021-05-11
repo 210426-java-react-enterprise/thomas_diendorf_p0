@@ -44,8 +44,10 @@ public class AccountScreen extends Screen {
 
             appAccount = accountDAO.findAccountByUsername(username);
 
-            if(appAccount != null){
+            if(appAccount != null && appAccount.getAccountOwner().equals(username)){
                 hasAccount = true;
+            } else {
+                hasAccount = false;
             }
 
         } catch (NullPointerException e) {
@@ -63,6 +65,7 @@ public class AccountScreen extends Screen {
             System.out.println("1) View account balance");
             System.out.println("2) Make a deposit");
             System.out.println("3) Make a withdrawal");
+            System.out.println("4) Exit");
 
             try {
 
@@ -72,17 +75,22 @@ public class AccountScreen extends Screen {
 
                 switch (userSelection) {
                     case "1":
-                        System.out.println("Balance is WIP");
+                        getBalance(appAccount.getAccountOwner());
                         break;
                     case "2":
                         System.out.println("How much do you wish to deposit?");
+                        System.out.print("$");
                         amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
                         makeDeposit(amount);
                         break;
                     case "3":
                         System.out.println("How much do you wish to withdraw?");
+                        System.out.print("$");
                         amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
                         makeWithdrawal(amount);
+                        break;
+                    case "4":
+                        System.out.println("Exiting account...");
                         break;
                 }
             } catch (IOException e) {
@@ -124,26 +132,26 @@ public class AccountScreen extends Screen {
 
     }
 
-    private double getBalance(String username){
+    private void getBalance(String username){
         double balance = 0;
 
         System.out.println("Getting the balance in your account...");
 
         try {
 
-            AppAccount appAccount = accountDAO.findAccountByUsername(username);
+            appAccount = accountDAO.findAccountByUsername(username);
 
             balance = appAccount.getBalance();
 
         } catch (NullPointerException e){
             System.out.println("There was an issue in acquiring the balance to your account.");
-            balance = 0;
             e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
         }
 
-        return balance;
+        System.out.println("You current balance is " + String.format("$%.2f", balance));
+
     }
 
 
@@ -158,8 +166,8 @@ public class AccountScreen extends Screen {
             appAccount = accountDAO.makeDeposit(appAccount.getAccountOwner(), amount);
 
             if(appAccount != null) {
-                System.out.println("You successfully deposited " + amount);
-                System.out.println("Your current balance is " + appAccount.getBalance());
+                System.out.println("You successfully deposited " + String.format("$%.2f", amount));
+                System.out.println("Your current balance is " + String.format("$%.2f", (appAccount.getBalance())));
             }
 
         } catch (NullPointerException e){
@@ -179,11 +187,17 @@ public class AccountScreen extends Screen {
         }
 
         try {
+            double initialBalance = appAccount.getBalance();
             appAccount = accountDAO.makeWithdrawal(appAccount.getAccountOwner(), amount);
 
+            if(initialBalance == appAccount.getBalance()){
+                System.out.println("You failed to withdraw " + String.format("$%.2f", ( amount*(-1) )) );
+                System.out.println("Your current balance is still " + String.format("$%.2f", (appAccount.getBalance())));
+            }
+
             if(appAccount != null) {
-                System.out.println("You successfully withdrew " + ( amount*(-1) ));
-                System.out.println("Your current balance is " + appAccount.getBalance());
+                System.out.println("You successfully withdrew " + String.format("$%.2f", ( amount*(-1) )) );
+                System.out.println("Your current balance is " + String.format("$%.2f", (appAccount.getBalance())));
             }
 
         } catch (NullPointerException e){
