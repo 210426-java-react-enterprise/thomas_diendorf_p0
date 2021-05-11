@@ -2,6 +2,7 @@ package com.revature.project0.daos;
 
 import com.revature.project0.models.AppUser;
 import com.revature.project0.util.ConnectionFactory;
+import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 
@@ -13,7 +14,7 @@ public class UserDAO {
      * This includes username, password, email, firstname, lastname, etc.
      *
      */
-    public void save(AppUser newUser){
+    public boolean save(AppUser newUser){
 
         System.out.println("Connecting to SQL database...");
 
@@ -43,12 +44,14 @@ public class UserDAO {
         } catch (SQLException e) {
             System.out.println("Upload failed!");
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
 
 
-    //should this even return anything?
+
     public AppUser findUserByUsernameAndPassword(String username, String password){
         AppUser user = null;
 
@@ -83,6 +86,49 @@ public class UserDAO {
         }
 
         return user;
+
+    }
+
+
+
+    //to be used only for checking if username is actually taken
+    //TODO: fix this thing!!!
+    public boolean findUserByUsername(String username){
+        //AppUser user = null;
+
+        //Connection is a connection with an SQL database.
+        //SQL statements are executed, and results returned, within the Connection.
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            String sql = "select username from app_user where username = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            String userGot = null;
+
+            while(rs.next()){
+                userGot = rs.getString("username");
+            }
+
+            if(userGot.equals(username)){
+                return true;//username is taken
+            }
+
+        } catch (NullPointerException e) {
+            return false;//username not found
+        } catch (PSQLException e) {//why is this catch happening?
+            //System.out.println("PSQL error caught.  Column name not found.");
+            e.printStackTrace();
+            return false;//username is not taken
+        } catch (SQLException e) {
+            e.printStackTrace();
+            e.printStackTrace();
+            return false;//ditto, but see errors
+        }
+
+        return false;
 
     }
 

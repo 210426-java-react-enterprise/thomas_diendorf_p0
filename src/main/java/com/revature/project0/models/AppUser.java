@@ -17,8 +17,8 @@ public class AppUser {
     private String city;
     private String state;
     //private String phone;
-    //private String birthDate;//TODO: implement this
-    //private String zipcode;//TODO: don't implement unless setting up separate SQL table
+    //private String birthDate;
+    //private String zipcode;//don't implement unless setting up separate SQL table
     private String accountID;//foreign key for SQL table
     //would this need a password?  Probably not if the account itself requires the password
 
@@ -42,6 +42,9 @@ public class AppUser {
         this.state = state;
         //this.phone = phone;
         //this.zipcode = zipcode;
+
+
+
     }
 
 

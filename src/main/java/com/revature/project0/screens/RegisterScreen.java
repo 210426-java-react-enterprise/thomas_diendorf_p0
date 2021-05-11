@@ -51,19 +51,32 @@ public class RegisterScreen extends Screen {
             //System.out.print("Age: ");
             //age = consoleReader.readLine();
 
-            //TODO: ensure this is unique
+
             System.out.print("Enter a username.  Must be 3-20 characters/symbols in length: ");
             labelW : while(true) {
                 username = consoleReader.readLine();
                 if(username.length() >= 3 && username.length() <= 20){
-                    break labelW;
+                    if(userDAO.findUserByUsername(username)){//if username is found in database
+                        System.out.println("Username is already taken.");
+                        tries--;
+                        if(tries <= 0){
+                            System.out.println("Redirecting to welcome screen...");
+                            return;
+                        } else {
+                            System.out.println("Enter a different username:");
+                        }
+                    }else {
+                        System.out.println("Username " + username + " is available.");
+                        break labelW;
+                    }
+
                 } else if(tries > 0){
-                    System.out.print("Invalid username.  Try again.  Tries left: " + tries);
+                    System.out.print("Invalid username.  Try again.  Tries left: " + tries + "\n : ");
                 } else {
                     System.out.print("Invalid username. No tries left.  Redirecting to welcome screen...");
                     return;
                 }
-                tries--;
+                //tries--;
             }
             tries = 5;
 
@@ -73,7 +86,7 @@ public class RegisterScreen extends Screen {
                 if(password.length() >= 7 && password.length() <= 20){
                     break labelW;
                 } else if(tries > 0){
-                    System.out.print("Invalid password.  Try again.  Tries left: " + tries);
+                    System.out.print("Invalid password.  Try again.  Tries left: " + tries + "\n : ");
                 } else {
                     System.out.print("Invalid password. No tries left.  Redirecting to welcome screen...");
                     return;
@@ -88,7 +101,7 @@ public class RegisterScreen extends Screen {
                 if(password2.equals(password)){
                     break labelW;
                 } else if(tries > 0){
-                    System.out.print("Password doesn't match.  Try again.  Tries left: " + tries);
+                    System.out.print("Password doesn't match.  Try again.  Tries left: " + tries + "\n : ");
                 } else {
                     System.out.print("Invalid password. No tries left.  Redirecting to welcome screen...");
                     return;
@@ -104,7 +117,7 @@ public class RegisterScreen extends Screen {
                 if(firstName.length() >= 3 && firstName.length() <= 20){
                     break labelW;
                 } else if(tries > 0){
-                    System.out.print("Invalid name.  Try again.  Tries left: " + tries);
+                    System.out.print("Invalid name.  Try again.  Tries left: " + tries + "\n : ");
                 } else {
                     System.out.print("Invalid name. No tries left.  Redirecting to welcome screen...");
                     return;
@@ -114,13 +127,13 @@ public class RegisterScreen extends Screen {
             tries = 5;
 
 
-            System.out.print("Last name: ");
+            System.out.print("Enter your last name.  Must be 3-20 characters: ");
             labelW : while(true) {
                 lastName = consoleReader.readLine();
                 if(lastName.length() >= 3 && lastName.length() <= 20){
                     break labelW;
                 } else if(tries > 0){
-                    System.out.print("Invalid name.  Try again.  Tries left: " + tries);
+                    System.out.print("Invalid name.  Try again.  Tries left: " + tries + "\n : ");
                 } else {
                     System.out.print("Invalid name. No tries left.  Redirecting to welcome screen...");
                     return;
@@ -141,7 +154,7 @@ public class RegisterScreen extends Screen {
                 if(matcher.matches()){
                     break labelW;
                 } else if(tries > 0){
-                    System.out.print("Invalid email.  Try again.  Tries left: " + tries);
+                    System.out.print("Invalid email.  Try again.  Tries left: " + tries + "\n : ");
                 } else {
                     System.out.print("Invalid email. No tries left.  Redirecting to welcome screen...");
                     return;
@@ -161,7 +174,7 @@ public class RegisterScreen extends Screen {
                 if(/*address.length() >= 7 && address.length() <= 40*/ matcher.matches()){
                     break labelW;
                 } else if(tries > 0){
-                    System.out.print("Invalid address.  Try again.  Tries left: " + tries);
+                    System.out.print("Invalid address.  Try again.  Tries left: " + tries + "\n : ");
                 } else {
                     System.out.print("Invalid address. No tries left.  Redirecting to welcome screen...");
                     return;
@@ -180,7 +193,7 @@ public class RegisterScreen extends Screen {
                 if(/*city.length() >= 3 && city.length() <= 20*/ matcher.matches()){
                     break labelW;
                 } else if(tries > 0){
-                    System.out.print("Invalid city.  Try again.  Tries left: " + tries);
+                    System.out.print("Invalid city.  Try again.  Tries left: " + tries + "\n : ");
                 } else {
                     System.out.print("Invalid city. No tries left.  Redirecting to welcome screen...");
                     return;
@@ -192,7 +205,7 @@ public class RegisterScreen extends Screen {
 
             regex = "[A-Z]{2}";
             pattern = Pattern.compile(regex);
-            System.out.print("Enter your State initials (2 letters only): ");
+            System.out.print("Enter your State initials (2 capitalized letters only): ");
             labelW : while(true) {
                 state = consoleReader.readLine();
                 matcher = pattern.matcher(state);
@@ -200,7 +213,7 @@ public class RegisterScreen extends Screen {
                 if(matcher.matches()){
                     break labelW;
                 } else if(tries > 0){
-                    System.out.print("Invalid State.  Try again.  Tries left: " + tries);
+                    System.out.print("Invalid State.  Try again.  Tries left: " + tries + "\n : ");
                 } else {
                     System.out.print("Invalid State. No tries left.  Redirecting to welcome screen...");
                     return;
@@ -220,7 +233,8 @@ public class RegisterScreen extends Screen {
             AppUser newUser = new AppUser(username, password, firstName, lastName, email,
                     address, city, state/*, zipcode, phone*/);
 
-            System.out.println("Created user: " + newUser);
+
+
 
             userDAO.save(newUser);
 
