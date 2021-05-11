@@ -173,7 +173,7 @@ public class AccountScreen extends Screen {
         } else {
             System.out.println("Please make an account " + appUser.getUsername() + "!");
 
-            String checkOrSave = "checking";//TODO: make it so that this doesn't need to have a default set just in case
+            String checkOrSave = null;
             String userSelection;
             boolean willMakeAccount = true;
 
@@ -195,10 +195,15 @@ public class AccountScreen extends Screen {
                         case "2":
                             checkOrSave = "savings";
                             break whileL;
+                        default:
+                            System.out.println("Invalid selection.  Try again.");
+                            tries--;
                     }
+                }
 
-                    System.out.println("Invalid selection.  Try again.");
-                    tries--;
+                if(checkOrSave == null){
+                    System.out.println("There was a problem creating your account.  Redirecting...");
+                    willMakeAccount = false;
                 }
 
 

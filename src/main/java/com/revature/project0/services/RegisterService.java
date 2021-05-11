@@ -45,6 +45,9 @@ public class RegisterService {
                         } else {
                             System.out.println("Enter a different username:");
                         }
+                    } else if(username.trim().length() < 3){
+                        System.out.print("Invalid username.  Try again.  Tries left: " + tries + "\n : ");
+                        tries--;
                     } else {
                         System.out.println("Username " + username + " is available.");
                         break labelW;
@@ -66,7 +69,7 @@ public class RegisterService {
         return username;
     }
 
-
+    //TODO:trim() for all of these!
     public String servicePassword(){
 
         System.out.print("Enter a password.  Must be 7-20 characters and/or symbols in length: ");
