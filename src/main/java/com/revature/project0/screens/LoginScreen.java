@@ -2,7 +2,6 @@ package com.revature.project0.screens;
 
 import com.revature.project0.daos.AccountDAO;
 import com.revature.project0.daos.UserDAO;
-import com.revature.project0.models.AppAccount;
 import com.revature.project0.models.AppUser;
 import com.revature.project0.util.AppUserInfo;
 import com.revature.project0.util.ScreenRouter;
