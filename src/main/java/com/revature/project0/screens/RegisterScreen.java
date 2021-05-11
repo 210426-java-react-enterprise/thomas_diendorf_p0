@@ -30,14 +30,14 @@ public class RegisterScreen extends Screen {
 
     public void render() {
 
-        String username;//PK for user, FK for account
-        String password;
-        String firstName;
-        String lastName;
-        String email;
-        String address;
-        String city;
-        String state;
+        String username = null;//PK for user, FK for account
+        String password = null;
+        String firstName = null;
+        String lastName = null;
+        String email = null;
+        String address = null;
+        String city = null;
+        String state = null;
         //String phone;
         //int age;
         //String zipcode;
@@ -52,8 +52,24 @@ public class RegisterScreen extends Screen {
         System.out.println("Enter 'e' at any time to quit registration.");
 
 
-        username = registerService.serviceUsername();
-        if(username == null){
+
+        int tries = 6;
+
+        try {
+            while (username == null && tries > 0) {
+                tries--;
+                if(tries == 5) {
+                    System.out.print("Enter a username.  Must be 3-20 characters/symbols in length: ");
+                } else {
+                    System.out.print("You have " + tries + " tries left: ");
+                }
+                username = consoleReader.readLine();
+                registerService.serviceUsername(username);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if(username == null || tries <= 0){
             System.out.print("Invalid username. Redirecting to welcome screen...");
             return;
         } else if (username.equals("e")){
@@ -61,17 +77,72 @@ public class RegisterScreen extends Screen {
             return;
         }
 
-        password = registerService.servicePassword();
+
+
+
+        tries = 6;
+        try {
+            while (password == null && tries > 0) {
+                tries--;
+                if(tries == 5) {
+                    System.out.print("Enter a password.  Must be 7-20 characters and/or symbols in length: ");
+                } else {
+                    System.out.print("You have " + tries + " tries left: ");
+                }
+                password = consoleReader.readLine();
+                password = registerService.servicePassword(password);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
         if(password == null){
             System.out.print("Invalid password. Redirecting to welcome screen...");
             return;
         } else if (password.equals("e")){
             System.out.print("Redirecting to welcome screen...");
             return;
+        } else {
+            System.out.print("Enter the password you just entered again: ");
+            tries = 5;
+            String password2 = null;
+            try {
+                labelW : while (true) {
+                    password2 = consoleReader.readLine();
+                    password2 = registerService.servicePassword(password2);
+                    if (password2.equals(password)) {
+                        break labelW;
+                    } else if (tries > 0) {
+                        System.out.print("Password doesn't match.  Try again.  Tries left: " + tries + "\n : ");
+                    } else {
+                        System.out.print("Invalid password. No tries left.  Redirecting to welcome screen...");
+                        return;
+                    }
+                    tries--;
+                }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
         }
 
 
-        firstName = registerService.serviceFirstName();
+
+
+        tries = 6;
+        try {
+            while (tries > 0 && firstName == null) {
+                tries--;
+                if(tries == 5) {
+                    System.out.print("Enter your first name.  Must be 3-20 characters: ");
+                } else{
+                    System.out.print("Invalid first name. You have " + tries + " tries left.");
+                    System.out.print("Enter your first name.  Must be 3-20 characters: ");
+                }
+                firstName = consoleReader.readLine();
+                firstName = registerService.serviceFirstName(firstName);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         if(firstName == null){
             System.out.print("Invalid first name. Redirecting to welcome screen...");
             return;
@@ -81,7 +152,24 @@ public class RegisterScreen extends Screen {
         }
 
 
-        lastName = registerService.serviceLastName();
+
+
+        tries = 6;
+        try {
+            while(tries > 0 && lastName == null) {
+                tries--;
+                if (tries == 5) {
+                    System.out.print("Enter your last name.  Must be 3-20 characters: ");
+                } else {
+                    System.out.print("Invalid last name.  You have " + tries + " left.");
+                    System.out.print("Enter your last name.  Must be 3-20 characters: ");
+                }
+                lastName = consoleReader.readLine();
+                lastName = registerService.serviceLastName(lastName);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         if(lastName == null){
             System.out.print("Invalid last name. Redirecting to welcome screen...");
             return;
@@ -91,7 +179,24 @@ public class RegisterScreen extends Screen {
         }
 
 
-        email = registerService.serviceEmail();
+
+
+        tries = 6;
+        try {
+            while(tries > 0 && email == null) {
+                tries--;
+                if(tries == 5) {
+                    System.out.print("Enter your email address: ");
+                } else{
+                    System.out.print("Invalid email.  You have " + tries + " left.");
+                    System.out.print("Enter your email: ");
+                }
+                email = consoleReader.readLine();
+                email = registerService.serviceEmail(email);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         if(email == null){
             System.out.print("Invalid email. Redirecting to welcome screen...");
             return;
@@ -101,7 +206,24 @@ public class RegisterScreen extends Screen {
         }
 
 
-        address = registerService.serviceAddress();
+
+
+        tries = 6;
+        try {
+            while(tries > 0 && address == null) {
+                tries--;
+                if (tries == 5) {
+                    System.out.print("Enter your address (7-40 characters): ");
+                } else {
+                    System.out.print("Invalid address.  You have " + tries + " tries left.");
+                    System.out.print("Enter your address (7-40 characters): ");
+                }
+                address = consoleReader.readLine();
+                address = registerService.serviceAddress(address);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
         if(address == null){
             System.out.print("Invalid address. Redirecting to welcome screen...");
             return;
@@ -111,7 +233,26 @@ public class RegisterScreen extends Screen {
         }
 
 
-        city = registerService.serviceCity();
+
+
+        tries = 6;
+        try {
+            while(tries > 0 && city == null) {
+                tries--;
+                if (tries == 5) {
+                    System.out.print("Enter the name of your city (3-20 characters): ");
+                } else {
+                    System.out.print("Invalid city.  You have " + tries + "tries left.");
+                    System.out.print("Enter the name of your city (3-20 characters): ");
+                }
+                city = consoleReader.readLine();
+                city = registerService.serviceCity(city);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            System.out.print("Redirecting to welcome screen...");
+            return;
+        }
         if(city == null){
             System.out.print("Invalid city. Redirecting to welcome screen...");
             return;
@@ -121,7 +262,24 @@ public class RegisterScreen extends Screen {
         }
 
 
-        state = registerService.serviceState();
+
+
+        tries = 6;
+        try {
+            while (tries > 0 && state == null) {
+                tries--;
+                if(tries == 5) {
+                    System.out.print("Enter your State initials (2 capitalized letters only): ");
+                }else{
+                    System.out.print("Invalid state.  You have " + tries + " tries remaining.");
+                    System.out.print("Enter your State initials (2 capitalized letters only): ");
+                }
+                state = consoleReader.readLine();
+                state = registerService.serviceState(state);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         if(state == null){
             System.out.print("Invalid state. Redirecting to welcome screen...");
             return;
