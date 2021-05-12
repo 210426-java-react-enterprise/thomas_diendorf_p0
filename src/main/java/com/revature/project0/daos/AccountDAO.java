@@ -206,6 +206,8 @@ public class AccountDAO {
     }
 
 
+
+    //TODO: put 2 methods below into a new utility class for converting strings and doubles adhering to USD currency
     public String doubleToStringCurrency(double dValue){
         String sValue = NumberFormat.getCurrencyInstance(Locale.US).format(dValue);
         return sValue;

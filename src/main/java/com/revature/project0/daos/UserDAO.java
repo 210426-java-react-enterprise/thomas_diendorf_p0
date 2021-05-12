@@ -23,27 +23,27 @@ public class UserDAO {
 
             System.out.println("Uploading created user information into database...");
 
-            /*
-            String sql = "insert into app_user (username, password, email, first_name, last_name, address, city, state)" +
-                    " values(?, ?, ?, ?, ?, ?, ?, ?);";
+            String sql = "insert into app_user (username, password, email)" +
+                    " values(?, ?, ?);";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, newUser.getUsername());
             pstmt.setString(2, newUser.getPassword());
             pstmt.setString(3, newUser.getEmail());
-            pstmt.setString(4, newUser.getFirstName());
-            pstmt.setString(5, newUser.getLastName());
-            pstmt.setString(6, newUser.getAddress());
-            pstmt.setString(7, newUser.getCity());
-            pstmt.setString(8, newUser.getState());
-            //pstmt.setString(9, newUser.getAccountID());
-             */
 
-            String sql = "insert into user_info (email, username, first_name, last_name, address, city, state)" +
+            pstmt.executeUpdate();
+
+
+
+
+
+
+
+            sql = "insert into user_info (email, username, first_name, last_name, address, city, state)" +
                     " values(?, ?, ?, ?, ?, ?, ?);";
 
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, newUser.getEmail());
             pstmt.setString(2, newUser.getUsername());
@@ -55,17 +55,6 @@ public class UserDAO {
 
             pstmt.executeUpdate();
 
-
-            sql = "insert into app_user (username, password, email)" +
-                    " values(?, ?, ?);";
-
-            pstmt = conn.prepareStatement(sql);
-
-            pstmt.setString(1, newUser.getUsername());
-            pstmt.setString(2, newUser.getPassword());
-            pstmt.setString(3, newUser.getEmail());
-
-            pstmt.executeUpdate();
 
             System.out.println("Upload complete!");
 
@@ -237,6 +226,32 @@ public class UserDAO {
         }
 
         //System.out.println("Account successfully removed!");
+        return true;
+    }
+
+
+
+    public boolean removeUserWithoutAccount(String username){
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            String sql = "delete from app_user where username = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+
+            pstmt.executeUpdate();
+
+            System.out.println("Deleting user...");
+
+        } catch (PSQLException e) {
+            System.out.println("You may have a bank account you need to close first!");
+            return true;
+        } catch(SQLException e){
+            System.out.println("There was a problem trying to delete your user account!");
+            e.printStackTrace();
+            return false;
+        }
+
         return true;
     }
 

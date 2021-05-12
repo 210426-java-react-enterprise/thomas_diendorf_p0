@@ -18,15 +18,15 @@ public class AppUser {
     private String state;
     //private String phone;
     //private String birthDate;
+    //private int ssn;
     //private String zipcode;//don't implement unless setting up separate SQL table
-    private String accountID;//foreign key for SQL table
-    //would this need a password?  Probably not if the account itself requires the password
+    private String accountID;
 
     public AppUser() {
         super();
     }
 
-    //TODO: make check to see if username is unique
+
     //users normally don't start with an accoundID, particularly if registering for first time
     public AppUser(String username, String password, String firstName, String lastName, String email,
                    String address, String city, String state/*, String zipcode,
@@ -94,17 +94,6 @@ public class AppUser {
         this.email = email;
     }
 
-    /*
-    public int getAge() {
-        return age;
-    }
-
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-     */
-
     public String getAccountID() {
         return accountID;
     }
@@ -165,7 +154,6 @@ public class AppUser {
         sb.append(", email='").append(email).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
-        //sb.append(", age=").append(age);
         sb.append(", address=").append(address);
         sb.append(", city=").append(city);
         sb.append(", state=").append(state);
