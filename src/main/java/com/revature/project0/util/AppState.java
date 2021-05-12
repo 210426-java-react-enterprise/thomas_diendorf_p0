@@ -10,14 +10,12 @@ import com.revature.project0.screens.WelcomeScreen;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-/*
+/**
 Initializes the BufferedReader and ScreenRouter to be used across all classes.
-No other classes will create a "new" BufferedReader or ScreenRouter.
 
-Instantiates all "new" Screens.
+Instantiates all "new" Screens, so that no other class utilizing this one need do so.
 
  */
-
 public class AppState {
     private BufferedReader consoleReader;
     private ScreenRouter router;
@@ -46,15 +44,30 @@ public class AppState {
 
     }
 
+    /**
+     Returns the Screen class that is to be rendered.
+
+     @return ScreenRouter
+
+     */
     public ScreenRouter getRouter() {
         return router;
     }
 
+
+    /**
+     Returns a boolean stating if the app is running, or not.
+
+     @return boolean
+     */
     public boolean isAppRunning() {
         return appRunning;
     }
 
-    //only real way to make appRunning false is with this method
+
+    /**
+     Makes the app stop running next time a screen ends.
+     */
     public void setAppRunning(boolean appRunning) {
         this.appRunning = appRunning;
     }

@@ -23,6 +23,11 @@ public class AccountDAO {
 
 
     public void createAccount(AppUser user, String accountType){
+
+        assert (user != null);
+        assert (accountType != null);
+
+
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             System.out.println("Creating checking account...");
 
@@ -33,7 +38,6 @@ public class AccountDAO {
 
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, accountType);
-            //pstmt.setDouble(3, 0.00);
             pstmt.setString(3, "$0.00");
 
             pstmt.executeUpdate();

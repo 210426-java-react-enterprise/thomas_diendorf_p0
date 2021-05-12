@@ -1,23 +1,57 @@
 package com.revature.project0.doaTests;
 
 import com.revature.project0.daos.AccountDAO;
+import com.revature.project0.daos.UserDAO;
+import com.revature.project0.models.AppAccount;
+import com.revature.project0.models.AppUser;
+import com.revature.project0.screens.AccountScreen;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
 
 public class AccountDOATest {
 
     AccountDAO accountDAO;
+    AppUser appUser;
+    UserDAO userDAO;
+    AccountScreen accountScreen;
+    AppAccount appAccount;
 
     @Before
     public void setUpTest(){
         accountDAO = new AccountDAO();
+        appUser = new AppUser("testcase", "p@$sw0Rd", "Test", "Case", "testcase@revature.net",
+                "12345 Testcase Rd.", "Test City", "TC");
+
+        accountScreen = mock(AccountScreen.class);
+
+        userDAO = new UserDAO();
+
+        userDAO.save(appUser);
+
+        accountDAO.createAccount(appUser, "checking");
+        appAccount = accountDAO.findAccountByUsername(appUser.getUsername());
+
+
     }
 
     @After
     public void tearDownTest(){
+        if(appAccount != null) {
+            if (userDAO.findUserByUsername(appUser.getUsername())) {
+                userDAO.removeUserWithAccount(appUser.getUsername(), accountDAO);
+            }
+        } else if(userDAO.findUserByUsername(appUser.getUsername())){
+            userDAO.removeUserWithoutAccount(appUser.getUsername());
+        }
+
         accountDAO = null;
+        appUser = null;
+        userDAO = null;
+        appAccount = null;
+
     }
 
     @Test
@@ -93,7 +127,23 @@ public class AccountDOATest {
         Assert.assertEquals("$56,794,020.05", result8);
     }
 
+    /*
+    @Test
+    public void testFindAccountByUsername(){
+        AppAccount test1 = accountDAO.findAccountByUsername(appUser.getUsername());
 
 
+    }
+     */
+
+
+    @Test
+    public void testMakeDeposit(){
+
+        appAccount = accountDAO.makeDeposit(appUser.getUsername(), 0);
+        double testBalance1 = 0;
+        Assert.assertEquals(testBalance1, appAccount.getBalance(), 0.01);
+
+    }
 
 }

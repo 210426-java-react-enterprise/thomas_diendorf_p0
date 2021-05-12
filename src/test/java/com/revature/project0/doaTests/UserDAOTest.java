@@ -1,23 +1,26 @@
 package com.revature.project0.doaTests;
 
+import com.revature.project0.daos.AccountDAO;
 import com.revature.project0.daos.UserDAO;
 import com.revature.project0.models.AppUser;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 public class UserDAOTest {
 
     UserDAO userDAO;
+    //AccountDAO accountDAO;
     AppUser appUser;
 
     @Before
     public void setUpTest(){
         userDAO = new UserDAO();
+        //accountDAO = new AccountDAO();
 
         appUser = new AppUser("testcase", "p@$sw0Rd", "Test", "Case", "testcase@revature.net",
                 "12345 Testcase Rd.", "Test City", "TC");
+
+        userDAO.save(appUser);
+        //accountDAO.createAccount(appUser, "checking");
     }
 
     @After
@@ -25,6 +28,7 @@ public class UserDAOTest {
         if(userDAO.findUserByUsername(appUser.getUsername())){
             userDAO.removeUserWithoutAccount(appUser.getUsername());
         }
+        //accountDAO.removeUserAccount(appUser.getUsername());
 
         userDAO = null;
         appUser = null;
@@ -33,7 +37,6 @@ public class UserDAOTest {
 
     @Test
     public void testSaveUser(){
-        userDAO.save(appUser);
         Assert.assertTrue(userDAO.findUserByUsername(appUser.getUsername()));
 
         AppUser appUserTemp = userDAO.findUserByUsernameAndPassword(appUser.getUsername(), appUser.getPassword());
@@ -50,15 +53,14 @@ public class UserDAOTest {
     }
 
 
-    //TODO: make this work!
     //if email is taken, returns true!
     @Test
     public void testFindByEmail(){
-        String test1 = appUser.getEmail();
-        String test2 = "bs@revature.net";
+        String test1 = appUser.getEmail();//should be taken
+        String test2 = "bs@revature.net";//should not be in database
 
-        Assert.assertFalse(userDAO.findEmailByEmail(test1));
-        Assert.assertTrue(userDAO.findEmailByEmail(test2));
+        Assert.assertTrue(userDAO.findEmailByEmail(test1));
+        Assert.assertFalse(userDAO.findEmailByEmail(test2));
     }
 
 
@@ -76,6 +78,12 @@ public class UserDAOTest {
         Assert.assertFalse(userDAO.findUserByUsername(appUser.getUsername()));
     }
 
+    /*
+    @After
+    public void testRemoveUserWithAccount(){
+        Assert.assertTrue(userDAO.removeUserWithAccount(appUser.getUsername(), accountDAO));
+    }
+    */
 
 
 }

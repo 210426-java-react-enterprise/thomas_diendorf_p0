@@ -166,24 +166,26 @@ public class UserDAO {
         //SQL statements are executed, and results returned, within the Connection.
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
-            String sql = "select email from app_user where email = ?";
+            String sql = "select email from user_info where email = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
 
             ResultSet rs = pstmt.executeQuery();
 
-            String userGot = null;
+
+            String userGot =null;
 
             while(rs.next()){
                 userGot = rs.getString("email");
             }
 
+
             if(userGot.equals(email)){
-                return true;//email is taken
+                return true;//email is found, thus email name is taken
             }
 
         } catch (NullPointerException e) {
-            return false;
+            return false;//no email found
         } catch (PSQLException e) {
             //System.out.println("PSQL error caught.  Column name not found.");
             e.printStackTrace();
