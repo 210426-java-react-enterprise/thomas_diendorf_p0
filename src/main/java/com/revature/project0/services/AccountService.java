@@ -31,7 +31,8 @@ public class AccountService {
         double dValue = 0;
         String noCommas = "";
 
-        noCommas = sValue.replaceAll(",", "");//in case large number with commas is passed
+        noCommas = sValue.replace("$", "");//in case a '$' is in front of the string
+        noCommas = noCommas.replaceAll(",", "");//in case large number with commas is passed
 
         dValue = Double.parseDouble(noCommas);
 

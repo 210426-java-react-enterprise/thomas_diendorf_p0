@@ -23,6 +23,7 @@ public class UserDAO {
 
             System.out.println("Uploading created user information into database...");
 
+            /*
             String sql = "insert into app_user (username, password, email, first_name, last_name, address, city, state)" +
                     " values(?, ?, ?, ?, ?, ?, ?, ?);";
 
@@ -37,6 +38,32 @@ public class UserDAO {
             pstmt.setString(7, newUser.getCity());
             pstmt.setString(8, newUser.getState());
             //pstmt.setString(9, newUser.getAccountID());
+             */
+
+            String sql = "insert into user_info (email, username, first_name, last_name, address, city, state)" +
+                    " values(?, ?, ?, ?, ?, ?, ?);";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, newUser.getEmail());
+            pstmt.setString(2, newUser.getUsername());
+            pstmt.setString(3, newUser.getFirstName());
+            pstmt.setString(4, newUser.getLastName());
+            pstmt.setString(5, newUser.getAddress());
+            pstmt.setString(6, newUser.getCity());
+            pstmt.setString(7, newUser.getState());
+
+            pstmt.executeUpdate();
+
+
+            sql = "insert into app_user (username, password, email)" +
+                    " values(?, ?, ?);";
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, newUser.getUsername());
+            pstmt.setString(2, newUser.getPassword());
+            pstmt.setString(3, newUser.getEmail());
 
             pstmt.executeUpdate();
 
@@ -73,12 +100,22 @@ public class UserDAO {
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setEmail(rs.getString("email"));
+            }
+
+
+            sql = "select * from user_info where username = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+
+            rs = pstmt.executeQuery();
+
+            //this while loop should only loop once
+            while (rs.next()) {
                 user.setFirstName(rs.getString("first_name"));
                 user.setLastName(rs.getString("last_name"));
                 user.setAddress(rs.getString("address"));
                 user.setCity(rs.getString("city"));
                 user.setState(rs.getString("state"));
-                user.setAccountID(rs.getString("account_id"));//reference with account(s) user starts with
             }
 
 

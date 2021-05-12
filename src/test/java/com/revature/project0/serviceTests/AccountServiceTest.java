@@ -1,4 +1,4 @@
-package com.revature.project0;
+package com.revature.project0.serviceTests;
 
 import com.revature.project0.services.AccountService;
 import org.junit.After;

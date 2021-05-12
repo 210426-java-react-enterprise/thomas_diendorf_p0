@@ -289,22 +289,20 @@ public class RegisterScreen extends Screen {
         }
 
 
-        //System.out.print("Zipcode: ");
-        //zipcode = consoleReader.readLine();
-
-
-        //System.out.print("Phone: ");
-        //phone = consoleReader.readLine();
 
         AppUser newUser = new AppUser(username, password, firstName, lastName, email,
                 address, city, state/*, zipcode, phone*/);
 
-        userDAO.save(newUser);
+        if(userDAO.save(newUser)){
+            router.navigate("/login");
+        }
+        //else go back to welcome screen
+
 
         //Once user is created, can login with that username and password.
         //If no account is detected after login, will create one at login screen
 
-        router.navigate("/login");
+
 
     }
 

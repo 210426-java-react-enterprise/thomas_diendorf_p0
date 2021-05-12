@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 
 /**
@@ -18,34 +20,6 @@ import java.sql.SQLException;
  *
  */
 public class AccountDAO {
-
-    //relies on having an account, and a user for the account
-    public void save (AppUser appUser, AppAccount appAccount){
-
-        System.out.println("Connecting to SQL database...");
-
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-
-            System.out.println("Uploading created account information into database...");
-
-            String sql = "insert into bank_account (username, account_type, balance)" +
-                    " values(?, ?, ?);";
-
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-
-            pstmt.setString(1, appAccount.getAccountOwner());
-            pstmt.setString(2, appAccount.getAccountType());
-            pstmt.setDouble(3, appAccount.getBalance());
-
-            pstmt.executeUpdate();
-
-            System.out.println("Upload complete!");
-
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-
-    }
 
 
     public void createAccount(AppUser user, String accountType){
@@ -91,14 +65,7 @@ public class AccountDAO {
                 account.setAccountOwner(rs.getString("username"));
                 account.setAccountType(rs.getString("account_type"));
                 account.setDateCreated(rs.getDate("date_created"));
-                //account.setBalance(rs.getDouble("balance"));
-
-                //some string to double conversion
-                StringBuilder builder = new StringBuilder(rs.getString("balance"));
-                builder.delete(0,1);//remove '$'
-                double balance = Double.valueOf(builder.toString());
-                account.setBalance(balance);
-
+                account.setBalance(stringCurrencyToDouble(rs.getString("balance")));
             }
         } catch(SQLException e){
             e.printStackTrace();
@@ -125,9 +92,9 @@ public class AccountDAO {
             return account;
         }
 
-        double setBalanceTo = currentBalance + amount;
+        currentBalance = currentBalance + amount;
 
-        String newBalance = "$" + String.valueOf(setBalanceTo);
+        String newBalance = doubleToStringCurrency(currentBalance);
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
@@ -174,9 +141,9 @@ public class AccountDAO {
 
         amount *= -1;
 
-        double setBalanceTo = currentBalance + amount;
+        currentBalance = currentBalance + amount;
 
-        String newBalance = String.format("$%.2f", setBalanceTo);
+        String newBalance = doubleToStringCurrency(currentBalance);
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
@@ -197,7 +164,7 @@ public class AccountDAO {
 
         account = findAccountByUsername(username);
 
-        System.out.println("Successfully withdrew " + String.format("$%.2f", amount * -1));
+        System.out.println("Successfully withdrew " + doubleToStringCurrency(amount));
         return account;
 
     }
@@ -239,8 +206,25 @@ public class AccountDAO {
     }
 
 
+    public String doubleToStringCurrency(double dValue){
+        String sValue = NumberFormat.getCurrencyInstance(Locale.US).format(dValue);
+        return sValue;
+    }
 
 
+    public double stringCurrencyToDouble(String sValue){
+
+        double dValue = 0;
+        String noCommas = "";
+
+        noCommas = sValue.replace("$", "");//in case a '$' is in front of the string
+        noCommas = noCommas.replaceAll(",", "");//in case large number with commas is passed
+
+        dValue = Double.parseDouble(noCommas);
+
+        return dValue;
+
+    }
 
 
 }

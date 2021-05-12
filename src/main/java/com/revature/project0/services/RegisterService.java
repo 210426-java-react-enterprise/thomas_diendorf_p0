@@ -10,7 +10,6 @@ public class RegisterService {
 
     private BufferedReader consoleReader;
     private UserDAO userDAO;
-    //private int tries;
 
     public RegisterService(BufferedReader consoleReader, UserDAO userDAO){
 
@@ -65,11 +64,17 @@ public class RegisterService {
 
         firstName = firstName.trim();
 
+        String regex = "^[A-Za-z]{3,20}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher;
+
         if(firstName.equals("e")){
             return firstName;
         }
 
-        if (firstName.length() >= 3 && firstName.length() <= 20) {
+        matcher = pattern.matcher(firstName);
+
+        if (matcher.matches()) {
             return firstName;
         }
 
@@ -83,11 +88,17 @@ public class RegisterService {
 
         lastName = lastName.trim();
 
+        String regex = "^[A-Za-z]{3,20}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher;
+
         if(lastName.equals("e")){
             return lastName;
         }
 
-        if (lastName.length() >= 3 && lastName.length() <= 20) {
+        matcher = pattern.matcher(lastName);
+
+        if (matcher.matches()) {
             return lastName;
         }
 
@@ -131,7 +142,7 @@ public class RegisterService {
 
         address = address.trim();
 
-        String regex = "[0-9]{3,5} [A-Z a-z]{3,34}";
+        String regex = "^[0-9]{3,5} [A-Z a-z]{3,35}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher;
 
@@ -155,7 +166,7 @@ public class RegisterService {
 
         city = city.trim();
 
-        String regex = "[A-Z a-z]{3,20}";
+        String regex = "^[A-Z a-z]{3,20}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher;
 
@@ -178,7 +189,7 @@ public class RegisterService {
 
         state = state.trim();
 
-        String regex = "[A-Z]{2}";
+        String regex = "^[A-Z]{2}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher;
 
