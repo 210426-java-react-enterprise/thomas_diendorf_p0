@@ -163,7 +163,7 @@ public class LinkedList<T> implements Queue<T>, List<T> {
         }
 
 
-        for(Node<T> runner = head; !runner.equals(null); runner = runner.nextNode){
+        for(Node<T> runner = head; runner != null; runner = runner.nextNode){
             if(runner.data.equals(data)){
                 if(runner.equals(head)){
                     head = head.nextNode;

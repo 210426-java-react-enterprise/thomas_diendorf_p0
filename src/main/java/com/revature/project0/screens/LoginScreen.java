@@ -6,8 +6,7 @@ import com.revature.project0.models.AppUser;
 import com.revature.project0.util.AppUserInfo;
 import com.revature.project0.util.ScreenRouter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 
 public class LoginScreen extends Screen {
 
@@ -17,6 +16,9 @@ public class LoginScreen extends Screen {
     private AccountDAO accountDAO;
     private AppUserInfo appUserInfo;
 
+    File file;
+    PrintStream printStream;
+
     public LoginScreen(BufferedReader consoleReader, ScreenRouter router,
                        AppUserInfo appUserInfo, UserDAO userDAO, AccountDAO accountDAO) {
         super("LoginScreen", "/login");
@@ -25,6 +27,14 @@ public class LoginScreen extends Screen {
         this.userDAO = userDAO;
         this.appUserInfo = appUserInfo;
         this.accountDAO = accountDAO;
+
+        file = new File("/resources/exceptionLog.txt");//TODO: gross
+
+        try {
+            printStream = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(printStream);
+        }
     }
 
     public void render() {
@@ -52,7 +62,7 @@ public class LoginScreen extends Screen {
                 System.out.println("Locating user...");
 
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace(printStream);
             }
 
 
@@ -88,7 +98,7 @@ public class LoginScreen extends Screen {
             }
         } catch (NullPointerException e) {
             //System.out.println("User not found!");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
         //appUser is still set to above, unless null, in which case this won't happen

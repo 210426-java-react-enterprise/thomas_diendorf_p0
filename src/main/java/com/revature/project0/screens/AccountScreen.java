@@ -7,8 +7,7 @@ import com.revature.project0.models.AppUser;
 import com.revature.project0.util.AppUserInfo;
 import com.revature.project0.util.ScreenRouter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 
 public class AccountScreen extends Screen {
 
@@ -19,6 +18,9 @@ public class AccountScreen extends Screen {
     private AccountDAO accountDAO;
     private AppAccount appAccount;//for use when needing username for account cross-reference
 
+    private File file;
+    PrintStream printStream;
+
     public AccountScreen(BufferedReader consoleReader, ScreenRouter router, AppUserInfo appUserInfo,
                          UserDAO userDAO, AccountDAO accountDAO){
         super("AccountScreen", "/account");
@@ -28,6 +30,13 @@ public class AccountScreen extends Screen {
         this.accountDAO = accountDAO;
         this.appUserInfo = appUserInfo;//stores username and password for access
         this.appAccount = null;
+
+        file = new File("/resources/exceptionLog.txt");
+        try {
+            printStream = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(printStream);
+        }
     }
 
 
@@ -233,9 +242,9 @@ public class AccountScreen extends Screen {
 
         } catch (NullPointerException e){
             System.out.println("There was an issue in acquiring the balance to your account.");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         } catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
         System.out.println("You current balance is " + String.format("$%.2f", balance));
@@ -260,9 +269,9 @@ public class AccountScreen extends Screen {
 
         } catch (NullPointerException e){
             System.out.println("There was an error in making your deposit!");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         } catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
     }
@@ -280,9 +289,9 @@ public class AccountScreen extends Screen {
 
         } catch (NullPointerException e){
             System.out.println("There was an error in making your withdrawal!");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         } catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
     }

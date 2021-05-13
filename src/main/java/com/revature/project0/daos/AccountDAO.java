@@ -5,6 +5,9 @@ import com.revature.project0.models.AppUser;
 import com.revature.project0.util.ConnectionFactory;
 import org.postgresql.util.PSQLException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +23,20 @@ import java.util.Locale;
  *
  */
 public class AccountDAO {
+
+    File file;
+    PrintStream printStream;
+
+    public AccountDAO(){
+        file = new File("exceptionLog.txt");//TODO: gross
+
+        try {
+            printStream = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(printStream);
+        }
+    }
+
 
 
     public void createAccount(AppUser user, String accountType){
@@ -45,7 +62,7 @@ public class AccountDAO {
             System.out.println("Account created!");
 
         } catch(SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
     }
 
@@ -72,7 +89,7 @@ public class AccountDAO {
                 account.setBalance(stringCurrencyToDouble(rs.getString("balance")));
             }
         } catch(SQLException e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
         return account;
@@ -84,6 +101,11 @@ public class AccountDAO {
 
         AppAccount account = findAccountByUsername(username);
 
+        if(amount <= 0){
+            System.out.println("Invalid amount!");
+            return account;
+        }
+
         double currentBalance = 0;
 
         try {
@@ -92,7 +114,7 @@ public class AccountDAO {
             }
         } catch (NullPointerException e){
             System.out.println("Error in making withdrawal!");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
             return account;
         }
 
@@ -114,7 +136,7 @@ public class AccountDAO {
             pstmt.executeUpdate();
 
         } catch(SQLException e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
         account = findAccountByUsername(username);
@@ -122,6 +144,7 @@ public class AccountDAO {
         return account;
 
     }
+
 
 
     public AppAccount makeWithdrawal(String username, double amount){
@@ -139,7 +162,7 @@ public class AccountDAO {
             }
         } catch (NullPointerException e){
             System.out.println("Error in making withdrawal!");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
             return account;
         }
 
@@ -163,7 +186,7 @@ public class AccountDAO {
             pstmt.executeUpdate();
 
         } catch(SQLException e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
         account = findAccountByUsername(username);
@@ -198,10 +221,12 @@ public class AccountDAO {
             System.out.println("Deleting account...");
 
         } catch (PSQLException e) {
+            System.out.println("Deleting account...");
+            e.printStackTrace(printStream);
             return true;//this thrown exception indicates no results returned by the query, indicating deletion
         } catch(SQLException e){
             System.out.println("There was a problem trying to close your account!");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
             return false;
         }
 

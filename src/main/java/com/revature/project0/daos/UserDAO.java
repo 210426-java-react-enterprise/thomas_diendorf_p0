@@ -1,13 +1,29 @@
 package com.revature.project0.daos;
 
-import com.revature.project0.models.AppAccount;
 import com.revature.project0.models.AppUser;
 import com.revature.project0.util.ConnectionFactory;
 import org.postgresql.util.PSQLException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.sql.*;
 
 public class UserDAO {
+
+    File file;
+    PrintStream printStream;
+
+    public UserDAO(){
+        file = new File("exceptionLog.txt");//TODO: gross
+
+        try {
+            printStream = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(printStream);
+        }
+    }
+
 
     /**
      * Saves AppUser data to SQL table app_user.
@@ -35,11 +51,6 @@ public class UserDAO {
             pstmt.executeUpdate();
 
 
-
-
-
-
-
             sql = "insert into user_info (email, username, first_name, last_name, address, city, state)" +
                     " values(?, ?, ?, ?, ?, ?, ?);";
 
@@ -60,7 +71,7 @@ public class UserDAO {
 
         } catch (SQLException e) {
             System.out.println("Upload failed!");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
             return false;
         }
         return true;
@@ -220,6 +231,7 @@ public class UserDAO {
             System.out.println("Deleting user...");
 
         } catch (PSQLException e) {
+            System.out.println("Deleting user...");
             return true;//this thrown exception indicates no results returned by the query, indicating deletion
         } catch(SQLException e){
             System.out.println("There was a problem trying to close your account!");

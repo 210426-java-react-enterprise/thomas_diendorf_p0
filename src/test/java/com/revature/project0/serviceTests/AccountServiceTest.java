@@ -1,5 +1,6 @@
 package com.revature.project0.serviceTests;
 
+import com.revature.project0.daos.AccountDAO;
 import com.revature.project0.services.AccountService;
 import org.junit.After;
 import org.junit.Assert;
@@ -21,6 +22,8 @@ public class AccountServiceTest {
     @Test
     public void testStringToDouble(){
         //arrange
+        AccountDAO accountDAO = new AccountDAO();
+
         String value1 = "0.00";
         String value2 = "1.00";
         String value3 = "1.10";
@@ -31,13 +34,13 @@ public class AccountServiceTest {
 
 
         //act
-        double result1 = accountService.inputStringCurrencyToDouble(value1);
-        double result2 = accountService.inputStringCurrencyToDouble(value2);
-        double result3 = accountService.inputStringCurrencyToDouble(value3);
-        double result4 = accountService.inputStringCurrencyToDouble(value4);
-        double result5 = accountService.inputStringCurrencyToDouble(value5);
-        double result6 = accountService.inputStringCurrencyToDouble(value6);
-        double result7 = accountService.inputStringCurrencyToDouble(value7);
+        double result1 = accountDAO.stringCurrencyToDouble(value1);
+        double result2 = accountDAO.stringCurrencyToDouble(value2);
+        double result3 = accountDAO.stringCurrencyToDouble(value3);
+        double result4 = accountDAO.stringCurrencyToDouble(value4);
+        double result5 = accountDAO.stringCurrencyToDouble(value5);
+        double result6 = accountDAO.stringCurrencyToDouble(value6);
+        double result7 = accountDAO.stringCurrencyToDouble(value7);
 
         //assert
         Assert.assertEquals(0.0, result1, 0.01);

@@ -41,6 +41,8 @@ public class AccountDOATest {
     public void tearDownTest(){
         if(appAccount != null) {
             if (userDAO.findUserByUsername(appUser.getUsername())) {
+                double balance = appAccount.getBalance();
+                appAccount.withdraw(balance);
                 userDAO.removeUserWithAccount(appUser.getUsername(), accountDAO);
             }
         } else if(userDAO.findUserByUsername(appUser.getUsername())){
@@ -127,23 +129,41 @@ public class AccountDOATest {
         Assert.assertEquals("$56,794,020.05", result8);
     }
 
-    /*
-    @Test
-    public void testFindAccountByUsername(){
-        AppAccount test1 = accountDAO.findAccountByUsername(appUser.getUsername());
-
-
-    }
-     */
 
 
     @Test
-    public void testMakeDeposit(){
+    public void testMakeDepositAndWithdrawal(){
 
         appAccount = accountDAO.makeDeposit(appUser.getUsername(), 0);
-        double testBalance1 = 0;
-        Assert.assertEquals(testBalance1, appAccount.getBalance(), 0.01);
+        Assert.assertEquals(0, appAccount.getBalance(), 0.01);
 
+        appAccount = accountDAO.makeDeposit(appUser.getUsername(), -50);
+        Assert.assertEquals(0, appAccount.getBalance(), 0.01);
+
+        appAccount = accountDAO.makeDeposit(appUser.getUsername(), 50.002);
+        Assert.assertEquals(50.00, appAccount.getBalance(), 0.01);
+
+        appAccount = accountDAO.makeDeposit(appUser.getUsername(), 52.99);
+        Assert.assertEquals(102.99, appAccount.getBalance(), 0.01);
+
+        appAccount = accountDAO.makeWithdrawal(appUser.getUsername(), 102.99);
+        Assert.assertEquals(0, appAccount.getBalance(), 0.01);
+
+        appAccount = accountDAO.makeWithdrawal(appUser.getUsername(), 102.99);
+        Assert.assertEquals(0, appAccount.getBalance(), 0.01);
+
+        appAccount = accountDAO.makeDeposit(appUser.getUsername(), 0.01);
+        Assert.assertEquals(0.01, appAccount.getBalance(), 0.01);
+
+        appAccount = accountDAO.makeWithdrawal(appUser.getUsername(), 0.02);
+        Assert.assertEquals(0.01, appAccount.getBalance(), 0.01);
+
+        appAccount = accountDAO.makeWithdrawal(appUser.getUsername(), 0.01);
+        Assert.assertEquals(0, appAccount.getBalance(), 0.01);
     }
+
+
+
+
 
 }

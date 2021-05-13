@@ -7,6 +7,9 @@ import com.revature.project0.util.AppUserInfo;
 import com.revature.project0.util.ScreenRouter;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 
 public class RegisterScreen extends Screen {
 
@@ -14,8 +17,10 @@ public class RegisterScreen extends Screen {
     private BufferedReader consoleReader;
     private ScreenRouter router;
     private AppUserInfo appUserInfo;
-
     private RegisterService registerService;
+
+    File file;
+    PrintStream printStream;
 
     public RegisterScreen(BufferedReader consoleReader, ScreenRouter router, AppUserInfo appUserInfo, UserDAO userDAO){
         super("RegisterScreen", "/register");
@@ -23,8 +28,15 @@ public class RegisterScreen extends Screen {
         this.router = router;
         this.userDAO = userDAO;
         this.appUserInfo = appUserInfo;
-
         this.registerService = new RegisterService(consoleReader, userDAO);
+
+        file = new File("/resources/exceptionLog.txt");//TODO: gross
+
+        try {
+            printStream = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(printStream);
+        }
     }
 
 
@@ -67,7 +79,7 @@ public class RegisterScreen extends Screen {
                 registerService.serviceUsername(username);
             }
         } catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
         if(username == null || tries <= 0){
             System.out.print("Invalid username. Redirecting to welcome screen...");
@@ -93,7 +105,7 @@ public class RegisterScreen extends Screen {
                 password = registerService.servicePassword(password);
             }
         } catch(Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
         if(password == null){
             System.out.print("Invalid password. Redirecting to welcome screen...");
@@ -120,7 +132,7 @@ public class RegisterScreen extends Screen {
                     tries--;
                 }
             } catch(Exception e){
-                e.printStackTrace();
+                e.printStackTrace(printStream);
             }
         }
 
@@ -141,7 +153,7 @@ public class RegisterScreen extends Screen {
                 firstName = registerService.serviceFirstName(firstName);
             }
         } catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
         if(firstName == null){
             System.out.print("Invalid first name. Redirecting to welcome screen...");
@@ -168,7 +180,7 @@ public class RegisterScreen extends Screen {
                 lastName = registerService.serviceLastName(lastName);
             }
         } catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
         if(lastName == null){
             System.out.print("Invalid last name. Redirecting to welcome screen...");
@@ -195,7 +207,7 @@ public class RegisterScreen extends Screen {
                 email = registerService.serviceEmail(email);
             }
         } catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
         if(email == null){
             System.out.print("Invalid email. Redirecting to welcome screen...");
@@ -222,7 +234,7 @@ public class RegisterScreen extends Screen {
                 address = registerService.serviceAddress(address);
             }
         } catch(Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
         if(address == null){
             System.out.print("Invalid address. Redirecting to welcome screen...");
@@ -249,7 +261,7 @@ public class RegisterScreen extends Screen {
                 city = registerService.serviceCity(city);
             }
         } catch(Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
             System.out.print("Redirecting to welcome screen...");
             return;
         }
@@ -278,7 +290,7 @@ public class RegisterScreen extends Screen {
                 state = registerService.serviceState(state);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
         if(state == null){
             System.out.print("Invalid state. Redirecting to welcome screen...");

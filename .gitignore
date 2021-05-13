@@ -31,3 +31,6 @@ target/
 
 # Properties files
 *.properties
+
+# Exception Handling log files
+exceptionLog.txt

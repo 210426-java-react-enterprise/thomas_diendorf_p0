@@ -2,6 +2,10 @@ package com.revature.project0.services;
 
 //import java.io.BufferedReader;
 
+/*
+TODO:Is there a purpose to this class?
+ */
+
 public class AccountService {
 
     //private BufferedReader consoleReader;
@@ -26,7 +30,7 @@ public class AccountService {
     }
     */
 
-    //TODO: put this in a new utility class for converting strings and doubles adhering to USD currency
+    /*
     public double inputStringCurrencyToDouble(String sValue){
 
         double dValue = 0;
@@ -40,5 +44,7 @@ public class AccountService {
         return dValue;
 
     }
+
+     */
 
 }

@@ -4,16 +4,30 @@ import com.revature.project0.util.ScreenRouter;
 import static com.revature.project0.Driver.app;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 
 public class WelcomeScreen extends Screen {
 
     private BufferedReader consoleReader;
     private ScreenRouter router;
 
+    File file;
+    PrintStream printStream;
+
     public WelcomeScreen(BufferedReader consoleReader, ScreenRouter router) {
         super("WelcomeScreen", "/welcome");
         this.consoleReader = consoleReader;
         this.router = router;
+
+        file = new File("/resources/exceptionLog.txt");//TODO: gross
+
+        try {
+            printStream = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(printStream);
+        }
     }
 
     @Override

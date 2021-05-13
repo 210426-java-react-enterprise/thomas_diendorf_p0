@@ -1,7 +1,6 @@
 package com.revature.project0.util;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,6 +16,9 @@ public class ConnectionFactory {
     private static ConnectionFactory connectionFactory;
     private Properties props = new Properties();
 
+    private File file;
+    PrintStream printStream;
+
     static {
         try {
             Class.forName("org.postgresql.Driver");//ensures this class loads.
@@ -28,10 +30,18 @@ public class ConnectionFactory {
 
     //doesn't initialize just yet
     private ConnectionFactory() {
+
+        file = new File("exceptionLog.txt");//TODO: cleanup this gross thing
+        try {
+            printStream = new PrintStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(printStream);
+        }
+
         try {//connects to application.properties file
             props.load(new FileReader("src/main/resources/application.properties"));
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
     }
 
@@ -56,7 +66,7 @@ public class ConnectionFactory {
                     props.getProperty("username"),
                     props.getProperty("password"));
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
         return conn;
