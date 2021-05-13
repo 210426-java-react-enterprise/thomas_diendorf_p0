@@ -8,6 +8,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
+/**
+ * First screen displayed for users.  From here, they may opt to navigate
+ * to the Login screen, Register screen, or exit the app.
+ */
 public class WelcomeScreen extends Screen {
 
     private BufferedReader consoleReader;
@@ -30,6 +34,10 @@ public class WelcomeScreen extends Screen {
         }
     }
 
+
+    /**
+     * Displays information for user to respond to with input.
+     */
     @Override
     public void render(){
 

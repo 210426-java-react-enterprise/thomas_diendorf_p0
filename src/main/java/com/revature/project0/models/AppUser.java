@@ -7,6 +7,9 @@ Can exist independent of an Account, I guess.
 technically using an app to login/create an account
  */
 
+/**
+ * Information about the current app user, stored for the duration user is logged in.
+ */
 public class AppUser {
     private String username;//aka primary key for SQL table
     private String password;
@@ -43,8 +46,6 @@ public class AppUser {
         //this.phone = phone;
         //this.zipcode = zipcode;
 
-
-
     }
 
 
@@ -54,42 +55,82 @@ public class AppUser {
         this.password = password;
     }
 
+    /**
+     * Gets username of current app user.
+     * @return username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Sets username of current app user.
+     * @param username String
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     *
+     * @return user's password as String
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Set's user's password.
+     * @param password String
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     *
+     * @return first name of user
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Sets the first name of user.
+     * @param firstName String
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     *
+     * @return last name of user as String
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * Sets last name of user.
+     * @param lastName String
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    /**
+     *
+     * @return user email as String
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets the email of the user.
+     * @param email String
+     */
     public void setEmail(String email) {
         this.email = email;
     }
@@ -102,26 +143,50 @@ public class AppUser {
         this.accountID = accountID;
     }
 
+    /**
+     *
+     * @return street address of user as String
+     */
     public String getAddress() {
         return address;
     }
 
+    /**
+     * Sets user's street address.
+     * @param address String
+     */
     public void setAddress(String address) {
         this.address = address;
     }
 
+    /**
+     *
+     * @return city of user as String
+     */
     public String getCity() {
         return city;
     }
 
+    /**
+     * Sets city of user.
+     * @param city String
+     */
     public void setCity(String city) {
         this.city = city;
     }
 
+    /**
+     *
+     * @return state of user as 2 capitalized letters in String format
+     */
     public String getState() {
         return state;
     }
 
+    /**
+     * Sets user's state as 2 capitalized letters.
+     * @param state String
+     */
     public void setState(String state) {
         this.state = state;
     }

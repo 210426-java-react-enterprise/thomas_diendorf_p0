@@ -8,6 +8,11 @@ import com.revature.project0.util.ScreenRouter;
 
 import java.io.*;
 
+/**
+ * Screen where user attempts to login to their account.  Redirects to
+ * the Account screen if they succeed, otherwise redirects to the
+ * Welcome screen.
+ */
 public class LoginScreen extends Screen {
 
     private BufferedReader consoleReader;
@@ -37,6 +42,11 @@ public class LoginScreen extends Screen {
         }
     }
 
+
+    /**
+     * Displays information for user to respond to with input.  Input is
+     * handled via ServiceScreen class.
+     */
     public void render() {
         System.out.println("Login to your account!");
         System.out.println("+-------------------------+");

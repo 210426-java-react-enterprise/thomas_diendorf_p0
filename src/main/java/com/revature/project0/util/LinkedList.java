@@ -186,30 +186,6 @@ public class LinkedList<T> implements Queue<T>, List<T> {
         }//end for loop
 
         return null;//no data removed
-
-
-        /*
-        Node<T> runner = new Node<> (data);
-        for(Node<T> temp = head; temp != null; temp = temp.nextNode){
-            if(temp.getData() == runner.getData()){
-                if(temp == head){
-                    head=temp.nextNode;
-                    head.prevNode = null;
-                }
-                else if(temp == tail){
-                    tail=temp.prevNode;
-                    temp.nextNode = null;
-                }
-                else {
-                    temp.nextNode.prevNode = temp.prevNode;
-                    temp.prevNode.nextNode = temp.nextNode;
-                }
-                size--;
-                break;
-            }
-        }
-
-         */
     }
 
 

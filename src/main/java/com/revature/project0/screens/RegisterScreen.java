@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
+/**
+ * Screen where user creates a new personal account.
+ */
 public class RegisterScreen extends Screen {
 
     private UserDAO userDAO;
@@ -40,6 +43,9 @@ public class RegisterScreen extends Screen {
     }
 
 
+    /**
+     * Displays information for user to respond to with input for creating a personal account.
+     */
     public void render() {
 
         String username = null;//PK for user, FK for account

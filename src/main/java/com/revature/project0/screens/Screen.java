@@ -1,5 +1,8 @@
 package com.revature.project0.screens;
 
+/**
+ * Blueprint for Screen class creation.
+ */
 public abstract class Screen {
     protected String name;
     protected String route;

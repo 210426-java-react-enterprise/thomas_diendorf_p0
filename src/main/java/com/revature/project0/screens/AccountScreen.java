@@ -9,6 +9,11 @@ import com.revature.project0.util.ScreenRouter;
 
 import java.io.*;
 
+/**
+ * Screen where user is presented with information about user's account.
+ * User inputs data for obtaining account balance, or depositing/withdrawing
+ * funds from account.
+ */
 public class AccountScreen extends Screen {
 
     private BufferedReader consoleReader;
@@ -40,6 +45,9 @@ public class AccountScreen extends Screen {
     }
 
 
+    /**
+     * Displays information for user to respond to regarding their financial account.
+     */
     public void render(){
 
         AppUser appUser = userDAO.findUserByUsernameAndPassword(appUserInfo.getCurrentUser(),
@@ -229,6 +237,12 @@ public class AccountScreen extends Screen {
 
     }
 
+
+    /**
+     * Will display user's current account balance.
+     *
+     * @param username of current user
+     */
     private void getBalance(String username){
         double balance = 0;
 
@@ -252,6 +266,11 @@ public class AccountScreen extends Screen {
     }
 
 
+    /**
+     * Deposit an amount of USD into account.
+     *
+     * @param amount user wishes to deposit into their account
+     */
     private void makeDeposit(double amount){
         if(amount <= 0){
             System.out.println("Invalid value!");
@@ -277,6 +296,11 @@ public class AccountScreen extends Screen {
     }
 
 
+    /**
+     * Amount of USD user will withdraw from account.  Must not be greater than the account balance.
+     *
+     * @param amount user will withdraw from account.
+     */
     private void makeWithdrawal(double amount){
         if(amount <= 0){
             System.out.println("Invalid value!");
@@ -297,6 +321,12 @@ public class AccountScreen extends Screen {
     }
 
 
+    /**
+     * Attempts to close user's financial account.
+     *
+     * @return returns boolean: true if the account is closed, otherwise returns false
+     * if there was a problem closing the account.
+     */
     private boolean closeAccount(){
 
         return accountDAO.removeUserAccount(appAccount.getAccountOwner());
@@ -304,6 +334,13 @@ public class AccountScreen extends Screen {
     }
 
 
+    /**
+     * Attempts to close both the financial and personal account of current user.
+     *
+     * @param username of user whose financial and personal account is to be deleted
+     * @return true if successfully deleted both financial and personal account,
+     * otherwise returns false if there was a problem closing one or both.
+     */
     private boolean closeAccountAndDeleteUser(String username){
 
         return userDAO.removeUserWithAccount(username, accountDAO);

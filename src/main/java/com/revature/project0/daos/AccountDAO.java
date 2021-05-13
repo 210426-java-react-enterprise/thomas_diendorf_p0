@@ -38,7 +38,11 @@ public class AccountDAO {
     }
 
 
-
+    /**
+     * Creates financial account for user in database.  Requires a personal account to exist.
+     * @param user AppUser
+     * @param accountType String, "checking" or "savings"
+     */
     public void createAccount(AppUser user, String accountType){
 
         assert (user != null);
@@ -67,7 +71,14 @@ public class AccountDAO {
     }
 
 
-
+    /**
+     * Locates user's financial account in the database, primarily for purposes
+     * of ensuring it exists for the sake of either making a new one, or
+     * for updating it or getting the balance.
+     *
+     * @param username String
+     * @return instance of user's AppAccount.
+     */
     public AppAccount findAccountByUsername(String username){
 
         AppAccount account = null;
@@ -96,7 +107,14 @@ public class AccountDAO {
     }
 
 
-
+    /**
+     * Deposits USD into user's account, converting inputted double
+     * into a proper string format, with a '$' and commas.
+     *
+     * @param username String
+     * @param amount double
+     * @return instance of user's AppAccount.
+     */
     public AppAccount makeDeposit(String username, double amount){
 
         AppAccount account = findAccountByUsername(username);
@@ -146,7 +164,13 @@ public class AccountDAO {
     }
 
 
-
+    /**
+     * Withdraws USD from user's account.
+     *
+     * @param username String
+     * @param amount double
+     * @return instance of user's AppAccount.
+     */
     public AppAccount makeWithdrawal(String username, double amount){
 
         AppAccount account = findAccountByUsername(username);
@@ -197,8 +221,12 @@ public class AccountDAO {
     }
 
 
-
-
+    /**
+     * Deletes user's account from database.
+     *
+     * @param username String
+     * @return boolean: true if successfully deleted, false if it failed.
+     */
     public boolean removeUserAccount(String username){
 
         //first check to see if balance is 0
@@ -237,12 +265,25 @@ public class AccountDAO {
 
 
     //TODO: put 2 methods below into a new utility class for converting strings and doubles adhering to USD currency
+
+    /**
+     * Converts a double into a String for USD currency conversion.
+     *
+     * @param dValue double
+     * @return same value as inputted double but in String format
+     */
     public String doubleToStringCurrency(double dValue){
         String sValue = NumberFormat.getCurrencyInstance(Locale.US).format(dValue);
         return sValue;
     }
 
 
+    /**
+     * Converts a String into a double for USD currency conversion.
+     *
+     * @param sValue String
+     * @return same value as inputted String but in double format.
+     */
     public double stringCurrencyToDouble(String sValue){
 
         double dValue = 0;

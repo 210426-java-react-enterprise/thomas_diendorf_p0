@@ -6,9 +6,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-/*
-Loads application.properties file to know AWS hosted location of SQL server.
+/**
+Loads application.properties file to known AWS hosted location of SQL server.
 Also loads postgresql Driver class.
+ Gets access to banking database.
  */
 
 public class ConnectionFactory {
@@ -28,7 +29,10 @@ public class ConnectionFactory {
     }
 
 
-    //doesn't initialize just yet
+    /** ConnectionFactory doesn't initialize here just yet, even though this is constructor.
+     * Must call getInstance() to initialize.  Necessary so that only one connection
+     * is running for the duration of app use.
+     */
     private ConnectionFactory() {
 
         file = new File("exceptionLog.txt");//TODO: cleanup this gross thing
@@ -45,7 +49,11 @@ public class ConnectionFactory {
         }
     }
 
-    //actually initializes when this is called
+    /**
+     *  Actually initializes ConnectionFactory when this is called
+     *
+     * @return ConnectionFactory
+     */
     public static ConnectionFactory getInstance() {
         if (connectionFactory == null) {
             connectionFactory = new ConnectionFactory();
@@ -55,7 +63,10 @@ public class ConnectionFactory {
 
     }
 
-    //get SQL server connection
+    /** Gets SQL server connection.
+     *
+     * @return Connection
+     */
     public Connection getConnection() {
 
         Connection conn = null;

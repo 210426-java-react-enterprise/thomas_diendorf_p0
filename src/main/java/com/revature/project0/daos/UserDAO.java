@@ -9,6 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.sql.*;
 
+/**
+ * Updates and creates user's personal information on database.
+ * Can also delete account from database, including financial account.
+ */
 public class UserDAO {
 
     File file;
@@ -29,7 +33,9 @@ public class UserDAO {
      * Saves AppUser data to SQL table app_user.
      *
      * This includes username, password, email, firstname, lastname, etc.
-     *
+     * @param newUser AppUser
+     * @return boolean: true if user's personal account has been created, false
+     * if it could not be created.
      */
     public boolean save(AppUser newUser){
 
@@ -78,8 +84,15 @@ public class UserDAO {
     }
 
 
-
-
+    /**
+     * Locates user's database information by searching for an entry with the user's
+     * username and password.  Primarily used for verifying user's information exists
+     * in the database.
+     *
+     * @param username String
+     * @param password String
+     * @return instance of AppUser
+     */
     public AppUser findUserByUsernameAndPassword(String username, String password){
         AppUser user = null;
 
@@ -128,8 +141,13 @@ public class UserDAO {
     }
 
 
-
-    //to be used only for checking if username is actually taken
+    /**
+     * To be used only for checking if username is actually taken.
+     *
+     * @param username String
+     * @return boolean: true if username is found in database,
+     * false if it is not.
+     */
     public boolean findUserByUsername(String username){
         //AppUser user = null;
 
@@ -170,7 +188,11 @@ public class UserDAO {
     }
 
 
-    //to be used only for checking if email is actually taken
+    /**
+     * To be used only for checking if email is actually taken.
+     * @param email String
+     * @return boolean: true if email is found, false if it is not.
+     */
     public boolean findEmailByEmail(String email){
 
         //Connection is a connection with an SQL database.
@@ -212,6 +234,15 @@ public class UserDAO {
     }
 
 
+    /**
+     * Locates user's financial account in database, then deletes it along
+     * with their personal account.
+     *
+     * @param username String
+     * @param accountDAO AccountDAO
+     * @return boolean: true if both accounts successfully deleted from database,
+     * false if they were not.
+     */
     public boolean removeUserWithAccount(String username, AccountDAO accountDAO){
 
         //first check to see if account can be removed
@@ -244,7 +275,13 @@ public class UserDAO {
     }
 
 
-
+    /**
+     * Locates user's account in the database, then deletes it.  They must not have a
+     * financial account when doing this.
+     *
+     * @param username String
+     * @return boolean: true if account was deleted, false if it wasn't.
+     */
     public boolean removeUserWithoutAccount(String username){
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {

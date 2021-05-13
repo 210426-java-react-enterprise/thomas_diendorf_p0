@@ -9,6 +9,11 @@ Dependent on AccountUser to exist
 
 import java.sql.Date;
 
+
+/**
+ * Stores information for current user.  Dependent on AppUser class having been
+ * instantiated earlier in the program.
+ */
 public class AppAccount {
     private String accountID; //unique for sql table entry
     //private String accountName;
@@ -30,10 +35,18 @@ public class AppAccount {
     }
 
 
+    /**
+     *
+     * @return username String of user who created (and thus owns) the account.
+     */
     public String getAccountOwner() {
         return accountOwner;
     }
 
+    /**
+     *
+     * @param accountOwner String
+     */
     public void setAccountOwner(String accountOwner) {
         this.accountOwner = accountOwner;
     }
@@ -42,6 +55,10 @@ public class AppAccount {
         return accountID;
     }
 
+    /**
+     * Identifier for the account belonging to user.
+     * @param accountID String
+     */
     public void setAccountID(String accountID) {
         this.accountID = accountID;
     }
@@ -50,6 +67,10 @@ public class AppAccount {
         return accountType;
     }
 
+    /**
+     * Either "checking" or "savings"
+     * @param accountType String
+     */
     public void setAccountType(String accountType) {
         this.accountType = accountType;
     }
@@ -58,14 +79,26 @@ public class AppAccount {
         return dateCreated;
     }
 
+    /**
+     * Date that account is created.
+     * @param dateCreated Date
+     */
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
+    /**
+     * Sets USD balance for account.
+     * @param balance double
+     */
     public void setBalance(double balance) {
         this.balance = balance;
     }
 
+    /**
+     * Gets the user's account balance.
+     * @return USD amount in double format
+     */
     public double getBalance() {
         return balance;
     }
@@ -74,6 +107,10 @@ public class AppAccount {
         this.balance += amount;
     }
 
+    /**
+     * Withdraw an amount from user's account balance
+     * @param amount double
+     */
     //add constraint to this on sql table that prevents it from falling below 0
     public void withdraw(double amount) {
         this.balance -= amount;

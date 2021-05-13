@@ -6,11 +6,20 @@ import java.io.BufferedReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Used primarily in conjunction with RegisterScreen class.  Verifies formats of anything
+ * user would input while on the Register Screen, e.g. username, password, email, address, etc.
+ */
 public class RegisterService {
 
     private BufferedReader consoleReader;
     private UserDAO userDAO;
 
+    /**
+     *
+     * @param consoleReader for user input
+     * @param userDAO for uploading user information to database
+     */
     public RegisterService(BufferedReader consoleReader, UserDAO userDAO){
 
         this.consoleReader = consoleReader;
@@ -18,6 +27,13 @@ public class RegisterService {
 
     }
 
+
+    /**
+     * Verifies inputted username is a valid format.
+     *
+     * @param username that user has chosen
+     * @return string of username; null if not valid, or "e" if user wishes to exit the screen
+     */
     public String serviceUsername(String username) {
 
         username = username.trim();
@@ -41,7 +57,12 @@ public class RegisterService {
     }
 
 
-
+    /**
+     * Verifies inputted password is a valid format.
+     *
+     * @param password that user has chosen
+     * @return string of the password; null if not valid, or "e" if user wishes to exit the screen
+     */
     public String servicePassword(String password){
 
         password = password.trim();
@@ -59,7 +80,12 @@ public class RegisterService {
     }
 
 
-
+    /**
+     * Verifies inputted first name is a valid format.
+     *
+     * @param firstName that user has chosen
+     * @return string of first name; null if not valid, or "e" if user wishes to exit the screen
+     */
     public String serviceFirstName(String firstName){
 
         firstName = firstName.trim();
@@ -83,7 +109,12 @@ public class RegisterService {
     }
 
 
-
+    /**
+     * Verifies inputted last name is a valid format.
+     *
+     * @param lastName that user has chosen
+     * @return string of lastName; null if not valid, or "e" if user wishes to exit the screen
+     */
     public String serviceLastName(String lastName){
 
         lastName = lastName.trim();
@@ -107,7 +138,12 @@ public class RegisterService {
     }
 
 
-
+    /**
+     * Verifies inputted email is a valid format.
+     *
+     * @param email that user has chosen
+     * @return string of email; null if not valid, or "e" if user wishes to exit the screen
+     */
     public String serviceEmail(String email){
 
         email = email.trim();
@@ -137,7 +173,12 @@ public class RegisterService {
     }
 
 
-
+    /**
+     * Verifies inputted address is a valid format.
+     *
+     * @param address that user has chosen
+     * @return string of address; null if not valid, or "e" if user wishes to exit the screen
+     */
     public String serviceAddress(String address){
 
         address = address.trim();
@@ -161,7 +202,12 @@ public class RegisterService {
     }
 
 
-
+    /**
+     * Verifies inputted city is a valid format.
+     *
+     * @param city that user has chosen
+     * @return string of city; null if not valid, or "e" if user wishes to exit the screen
+     */
     public String serviceCity(String city){
 
         city = city.trim();
@@ -185,6 +231,12 @@ public class RegisterService {
     }
 
 
+    /**
+     * Verifies inputted state is a valid format.  Must only be 2 capitalized letters.
+     *
+     * @param state that user has chosen
+     * @return string of state; null if not valid, or "e" if user wishes to exit the screen
+     */
     public String serviceState(String state){
 
         state = state.trim();
