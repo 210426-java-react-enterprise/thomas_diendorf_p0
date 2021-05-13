@@ -69,9 +69,9 @@ public class AccountScreen extends Screen {
 
         } catch (NullPointerException e) {
             hasAccount = false;
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         } catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
 
@@ -103,7 +103,7 @@ public class AccountScreen extends Screen {
                         case "2"://deposit
                             System.out.println("How much do you wish to deposit?");
                             System.out.print("$");
-                            amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
+                            amount = accountDAO.stringCurrencyToDouble(consoleReader.readLine());
                             makeDeposit(amount);
                             tries = 5;
                             break;
@@ -111,7 +111,7 @@ public class AccountScreen extends Screen {
                         case "3"://withdraw
                             System.out.println("How much do you wish to withdraw?");
                             System.out.print("$");
-                            amount = Double.parseDouble(consoleReader.readLine());//TODO: make sure this value is valid
+                            amount = accountDAO.stringCurrencyToDouble(consoleReader.readLine());
                             makeWithdrawal(amount);
                             tries = 5;
                             break;
@@ -178,14 +178,15 @@ public class AccountScreen extends Screen {
                     System.out.println("2) Make a deposit");
                     System.out.println("3) Make a withdrawal");
                     System.out.println("4) Delete your bank account");
-                    System.out.println("5) Exit");
+                    System.out.println("5) Delete bank and user account");
+                    System.out.println("6) Exit");
                     userSelection = consoleReader.readLine();
                 }
             } catch (IOException e) {
                 System.out.println("Invalid input!");
-                e.printStackTrace();
+                e.printStackTrace(printStream);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace(printStream);
             }
         } else {
             System.out.println("Please make an account " + appUser.getUsername() + "!");
@@ -227,7 +228,7 @@ public class AccountScreen extends Screen {
             } catch (IOException e) {
                 willMakeAccount = false;
                 System.out.println("There was a problem creating your account.  Redirecting...");
-                e.printStackTrace();
+                e.printStackTrace(printStream);
             }
 
             if(willMakeAccount) {
@@ -261,7 +262,7 @@ public class AccountScreen extends Screen {
             e.printStackTrace(printStream);
         }
 
-        System.out.println("You current balance is " + String.format("$%.2f", balance));
+        System.out.println("You current balance is " + accountDAO.doubleToStringCurrency(balance));
 
     }
 
@@ -278,12 +279,12 @@ public class AccountScreen extends Screen {
         }
 
         try {
-
+            double firstBalance = appAccount.getBalance();
             appAccount = accountDAO.makeDeposit(appAccount.getAccountOwner(), amount);
 
-            if(appAccount != null) {
-                System.out.println("You successfully deposited " + String.format("$%.2f", amount));
-                System.out.println("Your current balance is " + String.format("$%.2f", (appAccount.getBalance())));
+            if(appAccount != null && firstBalance < appAccount.getBalance()) {
+                System.out.println("You successfully deposited " + accountDAO.doubleToStringCurrency(amount));
+                System.out.println("Your current balance is " + accountDAO.doubleToStringCurrency(appAccount.getBalance()));
             }
 
         } catch (NullPointerException e){

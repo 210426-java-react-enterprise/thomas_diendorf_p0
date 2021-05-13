@@ -122,6 +122,9 @@ public class AccountDAO {
         if(amount <= 0){
             System.out.println("Invalid amount!");
             return account;
+        } else if(amount > 99999999.99){
+            System.out.println("The amount is too high!");
+            return account;
         }
 
         double currentBalance = 0;
@@ -137,6 +140,11 @@ public class AccountDAO {
         }
 
         currentBalance = currentBalance + amount;
+
+        if(currentBalance > 99999999.99){
+            System.out.println("Your account cannot hold this amount!");
+            return account;
+        }
 
         String newBalance = doubleToStringCurrency(currentBalance);
 

@@ -45,14 +45,14 @@ public class UserDAO {
 
             System.out.println("Uploading created user information into database...");
 
-            String sql = "insert into app_user (username, password, email)" +
-                    " values(?, ?, ?);";
+            String sql = "insert into app_user (username, password)" +
+                    " values(?, ?);";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, newUser.getUsername());
             pstmt.setString(2, newUser.getPassword());
-            pstmt.setString(3, newUser.getEmail());
+            //pstmt.setString(3, newUser.getEmail());
 
             pstmt.executeUpdate();
 
@@ -112,7 +112,7 @@ public class UserDAO {
                 user = new AppUser();
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
-                user.setEmail(rs.getString("email"));
+                //user.setEmail(rs.getString("email"));
             }
 
 
@@ -124,6 +124,7 @@ public class UserDAO {
 
             //this while loop should only loop once
             while (rs.next()) {
+                user.setEmail(rs.getString("email"));
                 user.setFirstName(rs.getString("first_name"));
                 user.setLastName(rs.getString("last_name"));
                 user.setAddress(rs.getString("address"));
@@ -133,7 +134,7 @@ public class UserDAO {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(printStream);
         }
 
         return user;
@@ -175,11 +176,11 @@ public class UserDAO {
             return false;//username not found
         } catch (PSQLException e) {//why is this catch happening?
             //System.out.println("PSQL error caught.  Column name not found.");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
             return false;//username is not taken
         } catch (SQLException e) {
-            e.printStackTrace();
-            e.printStackTrace();
+            e.printStackTrace(printStream);
+            e.printStackTrace(printStream);
             return false;//ditto, but see errors
         }
 
@@ -221,11 +222,11 @@ public class UserDAO {
             return false;//no email found
         } catch (PSQLException e) {
             //System.out.println("PSQL error caught.  Column name not found.");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
             return false;
         } catch (SQLException e) {
-            e.printStackTrace();
-            e.printStackTrace();
+            e.printStackTrace(printStream);
+            e.printStackTrace(printStream);
             return false;
         }
 
@@ -266,7 +267,7 @@ public class UserDAO {
             return true;//this thrown exception indicates no results returned by the query, indicating deletion
         } catch(SQLException e){
             System.out.println("There was a problem trying to close your account!");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
             return false;
         }
 
@@ -296,10 +297,11 @@ public class UserDAO {
 
         } catch (PSQLException e) {
             System.out.println("You may have a bank account you need to close first!");
+            e.printStackTrace(printStream);
             return true;
         } catch(SQLException e){
             System.out.println("There was a problem trying to delete your user account!");
-            e.printStackTrace();
+            e.printStackTrace(printStream);
             return false;
         }
 
