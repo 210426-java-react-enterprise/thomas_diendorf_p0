@@ -1,7 +1,6 @@
 package com.revature.project0.serviceTests;
 
 import com.revature.project0.daos.AccountDAO;
-import com.revature.project0.services.AccountService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,21 +8,19 @@ import org.junit.Test;
 
 public class AccountServiceTest {
 
-    AccountService accountService;
+    AccountDAO accountDAO;
 
     @Before
     public void setUpTest() {
-        accountService = new AccountService();
+        accountDAO = new AccountDAO();
     }
 
     @After
-    public void tearDownTest(){ accountService = null; }
+    public void tearDownTest(){ accountDAO = null; }
 
     @Test
     public void testStringToDouble(){
         //arrange
-        AccountDAO accountDAO = new AccountDAO();
-
         String value1 = "0.00";
         String value2 = "1.00";
         String value3 = "1.10";

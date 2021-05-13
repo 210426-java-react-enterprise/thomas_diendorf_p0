@@ -33,7 +33,7 @@ public class RegisterScreen extends Screen {
         this.appUserInfo = appUserInfo;
         this.registerService = new RegisterService(consoleReader, userDAO);
 
-        file = new File("/resources/exceptionLog.txt");//TODO: gross
+        file = new File("exceptionLog.txt");//TODO: gross
 
         try {
             printStream = new PrintStream(file);

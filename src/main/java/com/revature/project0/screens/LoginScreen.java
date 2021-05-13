@@ -33,7 +33,7 @@ public class LoginScreen extends Screen {
         this.appUserInfo = appUserInfo;
         this.accountDAO = accountDAO;
 
-        file = new File("/resources/exceptionLog.txt");//TODO: gross
+        file = new File("exceptionLog.txt");//TODO: gross
 
         try {
             printStream = new PrintStream(file);

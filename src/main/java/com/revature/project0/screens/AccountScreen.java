@@ -36,7 +36,7 @@ public class AccountScreen extends Screen {
         this.appUserInfo = appUserInfo;//stores username and password for access
         this.appAccount = null;
 
-        file = new File("/resources/exceptionLog.txt");
+        file = new File("exceptionLog.txt");
         try {
             printStream = new PrintStream(file);
         } catch (FileNotFoundException e) {

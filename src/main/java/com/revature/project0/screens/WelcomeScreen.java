@@ -25,7 +25,7 @@ public class WelcomeScreen extends Screen {
         this.consoleReader = consoleReader;
         this.router = router;
 
-        file = new File("/resources/exceptionLog.txt");//TODO: gross
+        file = new File("exceptionLog.txt");//TODO: gross
 
         try {
             printStream = new PrintStream(file);
